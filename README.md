@@ -1,5 +1,5 @@
 # Tinder Cards for React Native
-A package based on [@brentvatne](https://github.com/brentvatne/) awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
+A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
 
 ## Quick Start
 1. `npm install --save react-native-swipe-cards`
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
 ```
 
 ### More complex example
-```
+```javascript
 'use strict';
 
 import React, { StyleSheet, Text, View,Image} from 'react-native';
@@ -189,9 +189,3 @@ const styles = StyleSheet.create({
 - [ ] prop types
 - [ ] renderYup
 - [ ] renderNope
-
-```
-reduceCards(remainingCards)=> {
-  if
-}
-```
