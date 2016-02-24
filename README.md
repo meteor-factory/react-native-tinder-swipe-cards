@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
 | handleYup         | Function | Called when card is 'passed' with that card's data   |         |
 | handleNope        | Function | Called when card is 'rejected' with that card's data |         |
 
-`*` required 
+*required 
 
 ### Todo
 - [ ] Default props
