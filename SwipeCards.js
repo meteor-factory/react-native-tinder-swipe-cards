@@ -6,8 +6,6 @@ import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
-console.log(Defaults);
-
 var SWIPE_THRESHOLD = 120;
 
 export default class Tinder extends Component {
@@ -21,19 +19,7 @@ export default class Tinder extends Component {
     }
   }
 
-  // getDefaultProps() {
-  //   return {
-  //     loop: false,
-  //     showYup: true,
-  //     showNope: true,
-  //   };
-  // }
-  //
-  // propTypes() {
-  //   return {
-  //     loop: React.PropTypes.bool,
-  //   }
-  // }
+  // TODO: default props & prop types
 
   _goToNextCard() {
     let currentCardIdx = this.props.cards.indexOf(this.state.card);
@@ -44,6 +30,8 @@ export default class Tinder extends Component {
     let card = newIdx > this.props.cards.length - 1
       ? this.props.loop ? this.props.cards[0] : null
       : this.props.cards[newIdx];
+
+    console.log(card)
 
     this.setState({
       card: card
