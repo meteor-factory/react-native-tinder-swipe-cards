@@ -45,8 +45,6 @@ export default class Tinder extends Component {
       ? this.props.loop ? this.props.cards[0] : null
       : this.props.cards[newIdx];
 
-    console.log(card)
-
     this.setState({
       card: card
     });

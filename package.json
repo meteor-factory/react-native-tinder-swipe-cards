@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yogiben/react-native-tinder-swipe-cards.git"
+    "url": "git+https://github.com/meteor-factory/react-native-tinder-swipe-cards.git"
   },
   "keywords": [
     "react-native",
@@ -16,10 +16,10 @@
     "cards",
     "swipe"
   ],
-  "author": "yogiben",
+  "author": "meteor-factory",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yogiben/react-native-tinder-swipe-cards/issues"
+    "url": "https://github.com/meteor-factory/react-native-tinder-swipe-cards/issues"
   },
-  "homepage": "https://github.com/yogiben/react-native-tinder-swipe-cards#readme"
+  "homepage": "https://github.com/meteor-factory/react-native-tinder-swipe-cards#readme"
 }
