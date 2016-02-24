@@ -185,7 +185,6 @@ const styles = StyleSheet.create({
 ```
 
 ### Props
-```
 | Props name        | Type     | Description                                          | Default |
 |-------------------|----------|------------------------------------------------------|---------|
 | cards*            | Array    | Data that will be provided as props for the cards    |         |
@@ -196,7 +195,6 @@ const styles = StyleSheet.create({
 | showNope          | Boolean  | Shows the 'Nope'                                     | `true`  |
 | handleYup         | Function | Called when card is 'passed' with that card's data   |         |
 | handleNope        | Function | Called when card is 'rejected' with that card's data |         |
-```
 
 ### Todo
 - [ ] Default props
