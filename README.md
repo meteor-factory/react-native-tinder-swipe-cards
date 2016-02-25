@@ -8,7 +8,7 @@ A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [exam
 1. `npm install --save react-native-swipe-cards`
 2. Create a module e.g. `Tinder.js`
 3. Import it `import Tinder from './Tinder.js'`
-4. Render it `<Tinder />`
+4. Render it `<Tinder style={{flex: 1}} />`
 
 ```javascript
 // Tinder.js
@@ -16,7 +16,7 @@ A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [exam
 
 import React, {StyleSheet, Text, View, Image} from 'react-native';
 
-let SwipeCards = require('react-native-swipe-cards');
+import SwipeCards from 'react-native-swipe-cards';
 
 let Card = React.createClass({
   render() {
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 
 import React, {StyleSheet, Text, View, Image} from 'react-native';
 
-let SwipeCards = require('react-native-swipe-cards');
+import SwipeCards from 'react-native-swipe-cards';
 
 let Card = React.createClass({
   render() {
@@ -209,3 +209,4 @@ const styles = StyleSheet.create({
 - [ ] renderNope
 - [ ] Testing
 - [ ] Add more args to `cardRemoved`?
+- [ ] `class extends` all components
