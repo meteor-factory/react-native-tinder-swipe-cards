@@ -8,7 +8,7 @@ import Defaults from './Defaults.js';
 
 var SWIPE_THRESHOLD = 120;
 
-export default class Tinder extends Component {
+class SwipeCards extends Component {
   constructor(props) {
     super(props);
 
@@ -169,6 +169,24 @@ export default class Tinder extends Component {
   }
 }
 
+Contacts.propTypes = {
+  cards: React.PropTypes.array,
+  renderCards: React.PropTypes.func,
+  loop: React.PropTypes.bool,
+  renderNoMoreCards: React.PropTypes.func,
+  showYup: React.PropTypes.bool,
+  showNope: React.PropTypes.bool,
+  handleYup: React.PropTypes.func,
+  handleNope: React.PropTypes.func
+};
+
+Contacts.defaultProps = {
+  loop: false,
+  showYup: true,
+  showNope: true
+};
+
+
 var styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -203,3 +221,5 @@ var styles = StyleSheet.create({
     color: 'red',
   }
 });
+
+export default SwipeCards

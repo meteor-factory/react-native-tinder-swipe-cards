@@ -188,18 +188,18 @@ const styles = StyleSheet.create({
 | Props name        | Type     | Description                                          | Default |
 |-------------------|----------|------------------------------------------------------|---------|
 | cards*            | Array    | Data that will be provided as props for the cards    |         |
+| renderCard*       | Function | Renders the card with the current data               |          |
 | loop              | Boolean  | If true, start again when run out of cards           | `false` |
-| renderCard*        | Function | Renders the card with the current data               |         |
 | renderNoMoreCards | Function | Renders what is shown after swiped last card         |         |
 | showYup           | Boolean  | Shows the 'Yup' component                            | `true`  |
 | showNope          | Boolean  | Shows the 'Nope'                                     | `true`  |
 | handleYup         | Function | Called when card is 'passed' with that card's data   |         |
 | handleNope        | Function | Called when card is 'rejected' with that card's data |         |
 
-*required 
+*required
 
 ### Todo
-- [ ] Default props
-- [ ] prop types
+- [ ] Screenshots
+- [ ] Link to etc.
 - [ ] renderYup
 - [ ] renderNope
