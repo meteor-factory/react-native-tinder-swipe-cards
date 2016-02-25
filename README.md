@@ -1,5 +1,5 @@
 # Tinder Cards for React Native
-A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
+A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
 
 
 ![react native tinder cards](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards.gif)
