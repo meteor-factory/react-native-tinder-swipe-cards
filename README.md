@@ -178,11 +178,7 @@ export default React.createClass({
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
-    height: 300,
     borderRadius: 5,
     overflow: 'hidden',
     borderColor: 'grey',
