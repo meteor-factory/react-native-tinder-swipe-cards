@@ -1,6 +1,6 @@
 {
   "name": "react-native-swipe-cards",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tinder style swipe cards for stylishly passing, failing a card",
   "main": "SwipeCards.js",
   "scripts": {
