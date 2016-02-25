@@ -201,7 +201,11 @@ const styles = StyleSheet.create({
 
 *required
 
-### Todo
+### Todo (PRs welcome!)
+- [ ] Example with backend
+- [ ] Example with polaroids
 - [ ] Submit to repos
 - [ ] renderYup
 - [ ] renderNope
+- [ ] Testing
+- [ ] Add more args to `cardRemoved`?
