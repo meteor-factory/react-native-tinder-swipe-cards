@@ -19,8 +19,6 @@ class SwipeCards extends Component {
     }
   }
 
-  // TODO: default props & prop types
-
   _goToNextCard() {
     let currentCardIdx = this.props.cards.indexOf(this.state.card);
     let newIdx = currentCardIdx + 1;
