@@ -14,7 +14,7 @@ A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [exam
 // Tinder.js
 'use strict';
 
-import React, { StyleSheet, Text, View,Image} from 'react-native';
+import React, {StyleSheet, Text, View, Image} from 'react-native';
 
 let SwipeCards = require('react-native-swipe-cards');
 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 ```javascript
 'use strict';
 
-import React, { StyleSheet, Text, View,Image} from 'react-native';
+import React, {StyleSheet, Text, View, Image} from 'react-native';
 
 let SwipeCards = require('react-native-swipe-cards');
 
@@ -202,7 +202,6 @@ const styles = StyleSheet.create({
 *required
 
 ### Todo
-- [ ] Screenshots
-- [ ] Link to etc.
+- [ ] Submit to repos
 - [ ] renderYup
 - [ ] renderNope
