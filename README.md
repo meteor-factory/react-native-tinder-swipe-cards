@@ -1,6 +1,9 @@
 # Tinder Cards for React Native
 A package based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
 
+
+![alt text](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards.gif)
+
 ## Quick Start
 1. `npm install --save react-native-swipe-cards`
 2. Create a module e.g. `Tinder.js`
