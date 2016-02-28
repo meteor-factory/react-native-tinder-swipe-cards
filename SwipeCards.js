@@ -165,7 +165,7 @@ class SwipeCards extends Component {
   }
 }
 
-Contacts.propTypes = {
+SwipeCards.propTypes = {
   cards: React.PropTypes.array,
   renderCards: React.PropTypes.func,
   loop: React.PropTypes.bool,
@@ -176,7 +176,7 @@ Contacts.propTypes = {
   handleNope: React.PropTypes.func
 };
 
-Contacts.defaultProps = {
+SwipeCards.defaultProps = {
   loop: false,
   showYup: true,
   showNope: true
