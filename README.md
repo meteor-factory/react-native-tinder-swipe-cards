@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     borderColor: 'grey',
+    backgroundColor: 'white',
     borderWidth: 1,
     elevation: 1,
   },
