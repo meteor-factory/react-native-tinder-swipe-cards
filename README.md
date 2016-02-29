@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
 
 ### Todo (PRs welcome!)
 - [ ] Show next card underneath current card
+- [ ] Shadow when card is being dragged
 - [ ] Example with backend
 - [ ] Example with polaroids
 - [ ] Submit to repos
