@@ -165,6 +165,8 @@ class SwipeCards extends Component {
   }
 }
 
+let Contacts={}
+
 Contacts.propTypes = {
   cards: React.PropTypes.array,
   renderCards: React.PropTypes.func,
