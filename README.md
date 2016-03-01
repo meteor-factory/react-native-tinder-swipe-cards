@@ -226,8 +226,8 @@ const styles = StyleSheet.create({
 - [ ] Example with backend
 - [ ] Example with polaroids
 - [ ] Submit to repos
-- [ ] renderYup
-- [ ] renderNope
+- [x] renderYup
+- [x] renderNope
 - [ ] Testing
 - [ ] Add more args to `cardRemoved`?
 - [ ] `class extends` all components
