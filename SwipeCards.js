@@ -143,22 +143,31 @@ class SwipeCards extends Component {
             : this.renderNoMoreCards() }
 
 
-        { this.props.showNope
-          ? (
-            <Animated.View style={[styles.nope, animatedNopeStyles]}>
-              <Text style={styles.nopeText}>Nope!</Text>
-            </Animated.View>
+        { this.props.renderNope
+          ? this.props.renderNope(pan)
+          : (
+              this.props.showNope
+              ? (
+                <Animated.View style={[styles.nope, animatedNopeStyles]}>
+                  <Text style={styles.nopeText}>Nope!</Text>
+                </Animated.View>
+                )
+              : null
             )
-          : null
         }
 
-        { this.props.showYup
-          ? (
-            <Animated.View style={[styles.yup, animatedYupStyles]}>
-              <Text style={styles.yupText}>Yup!</Text>
-            </Animated.View>
-          )
-          : null }
+        { this.props.renderYup
+          ? this.props.renderYup(pan)
+          : (
+              this.props.showYup
+              ? (
+                <Animated.View style={[styles.yup, animatedYupStyles]}>
+                  <Text style={styles.yupText}>Yup!</Text>
+                </Animated.View>
+              )
+              : null
+            )
+        }
 
       </View>
     );
