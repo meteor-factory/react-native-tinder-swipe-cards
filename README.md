@@ -215,6 +215,8 @@ const styles = StyleSheet.create({
 | renderNoMoreCards | Function | Renders what is shown after swiped last card         |         |
 | showYup           | Boolean  | Shows the 'Yup' component                            | `true`  |
 | showNope          | Boolean  | Shows the 'Nope'                                     | `true`  |
+| renderYup         | Function | Renders Yup                                          | `true`  |
+| renderYup         | Function | Renders Nope                                          | `true`  |
 | handleYup         | Function | Called when card is 'passed' with that card's data   |         |
 | handleNope        | Function | Called when card is 'rejected' with that card's data |         |
 
