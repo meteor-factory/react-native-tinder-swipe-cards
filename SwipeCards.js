@@ -4,11 +4,13 @@
 import React, { StyleSheet, Text, View, Animated, Component, PanResponder, Image} from 'react-native';
 import clamp from 'clamp';
 
-import Defaults from './Defaults.js';
+import Defaults from './Defaults';
+import styles from './styles';
 
-var SWIPE_THRESHOLD = 120;
+var SWIPE_X_THRESHOLD = 150;
+var SWIPE_Y_THRESHOLD = 150;
 
-class SwipeCards extends Component {
+export default class SwipeCards extends Component {
   constructor(props) {
     super(props);
 
@@ -61,27 +63,36 @@ class SwipeCards extends Component {
 
       onPanResponderRelease: (e, {vx, vy}) => {
         this.state.pan.flattenOffset();
-        var velocity;
 
-        if (vx >= 0) {
-          velocity = clamp(vx, 3, 5);
-        } else if (vx < 0) {
-          velocity = clamp(vx * -1, 3, 5) * -1;
-        }
+        if (Math.abs(this.state.pan.y._value) > SWIPE_Y_THRESHOLD) {
+          if (this.state.pan.y._value < 0) {
+            this.props.handleUp(this.state.card)
 
-        if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD) {
+            this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
+
+            Animated.decay(this.state.pan, {
+              velocity: {x: vx, y: vy},
+              deceleration: 0.975
+            }).start(this._resetState.bind(this))
+          }else {
+            Animated.spring(this.state.pan, {
+              toValue: {x: 0, y: 0},
+              friction: 4
+            }).start()
+          }
+        }else if (Math.abs(this.state.pan.x._value) > SWIPE_X_THRESHOLD) {
 
           this.state.pan.x._value > 0
-            ? this.props.handleYup(this.state.card)
-            : this.props.handleNope(this.state.card)
+            ? this.props.handleRight(this.state.card)
+            : this.props.handleLeft(this.state.card)
 
           this.props.cardRemoved
             ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
             : null
 
           Animated.decay(this.state.pan, {
-            velocity: {x: velocity, y: vy},
-            deceleration: 0.98
+            velocity: {x: vx, y: vy},
+            deceleration: 0.975
           }).start(this._resetState.bind(this))
         } else {
           Animated.spring(this.state.pan, {
@@ -101,12 +112,7 @@ class SwipeCards extends Component {
   }
 
   renderNoMoreCards() {
-    if (this.props.renderNoMoreCards)
-      return this.props.renderNoMoreCards();
-
-    return (
-      <Defaults.NoMoreCards />
-    )
+    return this.props.renderNoMoreCards();
   }
 
   renderCard(cardData) {
@@ -118,57 +124,74 @@ class SwipeCards extends Component {
 
     let [translateX, translateY] = [pan.x, pan.y];
 
-    let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
-    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+    let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["15deg", "0deg", "-15deg"]});
+    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [1, 1, 1]});
     let scale = enter;
 
     let animatedCardstyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
 
-    let yupOpacity = pan.x.interpolate({inputRange: [0, 150], outputRange: [0, 1]});
-    let yupScale = pan.x.interpolate({inputRange: [0, 150], outputRange: [0.5, 1], extrapolate: 'clamp'});
-    let animatedYupStyles = {transform: [{scale: yupScale}], opacity: yupOpacity}
+    let rightOpacity = pan.x.interpolate({inputRange: [50, 75], outputRange: [0, 1]});
+    let rightScale = pan.x.interpolate({inputRange: [50, 150], outputRange: [0.5, 1], extrapolate: 'clamp'});
+    let animatedRightStyles = {transform: [{scale: rightScale}], opacity: rightOpacity}
 
-    let nopeOpacity = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0]});
-    let nopeScale = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0.5], extrapolate: 'clamp'});
-    let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity}
+    let upOpacity = pan.y.interpolate({inputRange: [-150, -150], outputRange: [1, 0]});
+    let upScale = pan.y.interpolate({inputRange: [-150, -150], outputRange: [1, 0.5], extrapolate: 'clamp'});
+    let animatedUpStyles = {transform: [{scale: upScale}], opacity: upOpacity}
+
+    let leftOpacity = pan.x.interpolate({inputRange: [-75, -50], outputRange: [1, 0]});
+    let leftScale = pan.x.interpolate({inputRange: [-150, -50], outputRange: [1, 0.5], extrapolate: 'clamp'});
+    let animatedLeftStyles = {transform: [{scale: leftScale}], opacity: leftOpacity}
 
     return (
-      <View style={styles.container}>
+      <View style={styles.containerSwipeCards}>
         { this.state.card
-            ? (
-            <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
-              {this.renderCard(this.state.card)}
-            </Animated.View>
-            )
-            : this.renderNoMoreCards() }
+          ? (
+          <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
+            {this.renderCard(this.state.card)}
 
-
-        { this.props.renderNope
-          ? this.props.renderNope(pan)
-          : (
-              this.props.showNope
-              ? (
-                <Animated.View style={[styles.nope, animatedNopeStyles]}>
-                  <Text style={styles.nopeText}>Nope!</Text>
-                </Animated.View>
+            { this.props.renderRight
+              ? this.props.renderRight(pan)
+              : (
+                  this.props.showRight
+                  ? (
+                    <Animated.View style={[styles.right, animatedRightStyles]}>
+                      <Text style={styles.rightText}>LIKE!</Text>
+                    </Animated.View>
+                    )
+                  : null
                 )
-              : null
-            )
-        }
+            }
 
-        { this.props.renderYup
-          ? this.props.renderYup(pan)
-          : (
-              this.props.showYup
-              ? (
-                <Animated.View style={[styles.yup, animatedYupStyles]}>
-                  <Text style={styles.yupText}>Yup!</Text>
-                </Animated.View>
-              )
-              : null
-            )
-        }
+            { this.props.renderUp
+              ? this.props.renderUp(pan)
+              : (
+                  this.props.showUp
+                  ? (
+                    <Animated.View style={[styles.up, animatedUpStyles]}>
+                      <Text style={styles.upText}>LOVE IT!</Text>
+                    </Animated.View>
+                    )
+                  : null
+                )
+            }
 
+            { this.props.renderLeft
+              ? this.props.renderLeft(pan)
+              : (
+                  this.props.showLeft
+                  ? (
+                    <Animated.View style={[styles.left, animatedLeftStyles]}>
+                      <Text style={styles.leftText}>NOPE!</Text>
+                    </Animated.View>
+                    )
+                  : null
+                )
+            }
+
+          </Animated.View>
+          )
+          : this.renderNoMoreCards()
+        }
       </View>
     );
   }
@@ -179,52 +202,17 @@ SwipeCards.propTypes = {
   renderCards: React.PropTypes.func,
   loop: React.PropTypes.bool,
   renderNoMoreCards: React.PropTypes.func,
-  showYup: React.PropTypes.bool,
-  showNope: React.PropTypes.bool,
-  handleYup: React.PropTypes.func,
-  handleNope: React.PropTypes.func
+  showRight: React.PropTypes.bool,
+  showUp: React.PropTypes.bool,
+  showLeft: React.PropTypes.bool,
+  handleRight: React.PropTypes.func,
+  handleUp: React.PropTypes.func,
+  handleLeft: React.PropTypes.func
 };
 
 SwipeCards.defaultProps = {
   loop: false,
-  showYup: true,
-  showNope: true
+  showRight: true,
+  showUp: true,
+  showLeft: true
 };
-
-
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  yup: {
-    borderColor: 'green',
-    borderWidth: 2,
-    position: 'absolute',
-    padding: 20,
-    bottom: 20,
-    borderRadius: 5,
-    right: 20,
-  },
-  yupText: {
-    fontSize: 16,
-    color: 'green',
-  },
-  nope: {
-    borderColor: 'red',
-    borderWidth: 2,
-    position: 'absolute',
-    bottom: 20,
-    padding: 20,
-    borderRadius: 5,
-    left: 20,
-  },
-  nopeText: {
-    fontSize: 16,
-    color: 'red',
-  }
-});
-
-export default SwipeCards

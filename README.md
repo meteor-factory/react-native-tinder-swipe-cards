@@ -51,6 +51,9 @@ export default React.createClass({
   handleNope (card) {
     console.log(`Nope for ${card.text}`)
   },
+  handleUp (card) {
+    console.log(`Up for ${card.text}`)
+  },
   render() {
     return (
       <SwipeCards
@@ -61,6 +64,7 @@ export default React.createClass({
 
         handleYup={this.handleYup}
         handleNope={this.handleNope}
+        handleUp={this.handleUp}
       />
     )
   }
@@ -139,6 +143,9 @@ export default React.createClass({
   handleNope (card) {
     console.log("nope")
   },
+  handleUp (card) {
+    console.log("up")
+  },
   cardRemoved (index) {
     console.log(`The index is ${index}`);
 
@@ -172,6 +179,7 @@ export default React.createClass({
 
         handleYup={this.handleYup}
         handleNope={this.handleNope}
+        handleUp={this.handleUp}
         cardRemoved={this.cardRemoved}
       />
     )
