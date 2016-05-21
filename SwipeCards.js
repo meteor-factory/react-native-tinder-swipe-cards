@@ -58,6 +58,10 @@ class SwipeCards extends Component {
     constructor(props) {
         super(props);
 
+        console.log(props)
+        console.log(props.containerStyle)
+        console.log(props.yupStyle)
+
         this.state = {
             pan: new Animated.ValueXY(),
             enter: new Animated.Value(0.5),
