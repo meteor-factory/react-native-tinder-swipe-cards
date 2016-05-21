@@ -62,6 +62,16 @@ class SwipeCards extends Component {
         console.log(props.containerStyle)
         console.log(props.yupStyle)
 
+        this.props.containerStyle = this.props.containerStyle || styles.container;
+        this.props.yupStyle = this.props.yupStyle || styles.yupStyle;
+        this.props.yupTextStyle = this.props.yupTextStyle || styles.yupTextStyle;
+        this.props.nopeStyle = this.props.nopeStyle || styles.nopeStyle;
+        this.props.nopeTextStyle = this.props.nopeTextStyle || styles.nopeTextStyle;
+
+        console.log(props)
+        console.log(props.containerStyle)
+        console.log(props.yupStyle)
+
         this.state = {
             pan: new Animated.ValueXY(),
             enter: new Animated.Value(0.5),
@@ -243,12 +253,7 @@ SwipeCards.propTypes = {
 SwipeCards.defaultProps = {
     loop: false,
     showYup: true,
-    showNope: true,
-    containerStyle: styles.container,
-    yupStyle: styles.yup,
-    yupTextStyle: styles.yupText,
-    nopeStyle: styles.nope,
-    nopeTextStyle: styles.nopeText
+    showNope: true
 };
 
 export default SwipeCards
