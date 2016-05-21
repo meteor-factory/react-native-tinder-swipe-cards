@@ -192,7 +192,12 @@ SwipeCards.propTypes = {
     showYup: React.PropTypes.bool,
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
-    handleNope: React.PropTypes.func
+    handleNope: React.PropTypes.func,
+    containerStyle: React.PropTypes.style,
+    yupStyle: React.PropTypes.style,
+    yupTextStyle: React.PropTypes.style,
+    nopeStyle: React.PropTypes.style,
+    nopeTextStyle: React.PropTypes.style
 };
 
 SwipeCards.defaultProps = {
