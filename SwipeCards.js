@@ -58,20 +58,6 @@ class SwipeCards extends Component {
     constructor(props) {
         super(props);
 
-        // console.log(props)
-        // console.log(props.containerStyle)
-        // console.log(props.yupStyle)
-        //
-        // this.props.containerStyle = this.props.containerStyle || styles.container;
-        // this.props.yupStyle = this.props.yupStyle || styles.yupStyle;
-        // this.props.yupTextStyle = this.props.yupTextStyle || styles.yupTextStyle;
-        // this.props.nopeStyle = this.props.nopeStyle || styles.nopeStyle;
-        // this.props.nopeTextStyle = this.props.nopeTextStyle || styles.nopeTextStyle;
-        //
-        // console.log(props)
-        console.log(props.containerStyle)
-        console.log(props.yupStyle)
-
         this.state = {
             pan: new Animated.ValueXY(),
             enter: new Animated.Value(0.5),
