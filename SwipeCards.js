@@ -1,7 +1,7 @@
 /* Gratefully copied from https://github.com/brentvatne/react-native-animated-demo-tinder */
 'use strict';
 
-import React, { StyleSheet, Text, View, Animated, Component, PanResponder, Image} from 'react-native';
+import React, { StyleSheet, Text, View, Animated, Component, PanResponder, Image, TouchableOpacity, Dimensions} from 'react-native';
 import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
@@ -28,6 +28,20 @@ class SwipeCards extends Component {
     let card = newIdx > this.props.cards.length - 1
       ? this.props.loop ? this.props.cards[0] : null
       : this.props.cards[newIdx];
+
+    this.setState({
+      card: card
+    });
+  }
+
+  _goToPreviousCard() {
+    let currentCardIdx = this.props.cards.indexOf(this.state.card);
+    let newIdx = currentCardIdx - 1;
+
+    // Checks to see if first card.
+    // If true, will start again from the first card.
+    let card = newIdx < 0
+      ? this.props.cards[0] : this.props.cards[newIdx];
 
     this.setState({
       card: card
@@ -100,6 +114,13 @@ class SwipeCards extends Component {
     this._animateEntrance();
   }
 
+  _previousState() {
+    this.state.pan.setValue({x: 0, y: 0});
+    this.state.enter.setValue(0);
+    this._goToPreviousCard();
+    this._animateEntrance();
+  }
+
   renderNoMoreCards() {
     if (this.props.renderNoMoreCards)
       return this.props.renderNoMoreCards();
@@ -111,6 +132,30 @@ class SwipeCards extends Component {
 
   renderCard(cardData) {
     return this.props.renderCard(cardData)
+  }
+
+  _backButton() {
+    this._previousState();
+  }
+
+  _yupButton() {
+    this.props.handleRight(this.state.card);
+    this.props.cardRemoved
+      ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
+      : null;
+    Animated.timing(this.state.pan, {
+      toValue: {x: 1000, y: 0},
+    }).start(this._resetState.bind(this));
+  }
+
+  _nopeButton() {
+    this.props.handleLeft(this.state.card);
+    this.props.cardRemoved
+      ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
+      : null;
+    Animated.timing(this.state.pan, {
+      toValue: {x: -1000, y: 0},
+    }).start(this._resetState.bind(this));
   }
 
   render() {
@@ -134,6 +179,11 @@ class SwipeCards extends Component {
 
     return (
       <View style={styles.container}>
+      <View style={styles.buttonFooterContainer}>
+        <TouchableOpacity onPress={this._backButton.bind(this)} style={styles.buttonFooter}><Text>Back</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this._nopeButton.bind(this)} style={styles.buttonFooter}><Text>Nope!</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this._yupButton.bind(this)} style={styles.buttonFooter}><Text>Yup!</Text></TouchableOpacity>
+      </View>
         { this.state.card
             ? (
             <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
@@ -176,7 +226,7 @@ class SwipeCards extends Component {
 
 SwipeCards.propTypes = {
   cards: React.PropTypes.array,
-  renderCards: React.PropTypes.func,
+  renderCard: React.PropTypes.func,
   loop: React.PropTypes.bool,
   renderNoMoreCards: React.PropTypes.func,
   showYup: React.PropTypes.bool,
@@ -191,40 +241,73 @@ SwipeCards.defaultProps = {
   showNope: true
 };
 
+const {width, height, scale} = Dimensions.get("window"),
+    vw = width / 100,
+    vh = height / 100,
+    vmin = Math.min(vw, vh),
+    vmax = Math.max(vw, vh);
 
 var styles = StyleSheet.create({
+  card: {
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   yup: {
+    alignItems: 'center',
     borderColor: 'green',
-    borderWidth: 2,
+    borderWidth: 5,
     position: 'absolute',
-    padding: 20,
-    bottom: 20,
-    borderRadius: 5,
-    right: 20,
+    top: 4 * vh,
+    left: 4 * vw,
+    width: 60 * vmin,
+    padding: 5 * vmin,
+    borderRadius: 10,
   },
   yupText: {
-    fontSize: 16,
+    fontSize: 48,
+    fontWeight: 'bold',
     color: 'green',
+    backgroundColor: 'transparent',
   },
   nope: {
+    alignItems: 'center',
     borderColor: 'red',
-    borderWidth: 2,
+    borderWidth: 5,
     position: 'absolute',
-    bottom: 20,
-    padding: 20,
-    borderRadius: 5,
-    left: 20,
+    top: 4 * vh,
+    right: 4 * vw,
+    width: 60 * vmin,
+    padding: 5 * vmin,
+    borderRadius: 10,
   },
   nopeText: {
-    fontSize: 16,
+    fontSize: 48,
+    fontWeight: 'bold',
     color: 'red',
-  }
+    backgroundColor: 'transparent',
+  },
+  buttonFooterContainer: {
+    flexDirection: 'row',
+    width: 90 * vw,
+    height: 10 * vh,
+    marginLeft: 5 * vmin,
+    marginRight: 5 * vmin,
+    justifyContent: 'space-around',
+    position: 'absolute',
+    bottom: 0 * vh,
+  },
+  buttonFooter: {
+    width: 10 * vh,
+    borderWidth: 1 * vmin,
+    borderRadius: 10 * vmin,
+    borderColor: '#F2F2F2',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default SwipeCards
