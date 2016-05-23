@@ -179,10 +179,10 @@ class SwipeCards extends Component {
         let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity}
 
         return (
-            <View style={this.props.containerStyle}>
+            <View >
                 { this.state.card
                     ? (
-                    <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
+                    <Animated.View style={[animatedCardstyles]} {...this._panResponder.panHandlers}>
                         {this.renderCard(this.state.card)}
                     </Animated.View>
                 )
@@ -194,8 +194,8 @@ class SwipeCards extends Component {
                     : (
                     this.props.showNope
                         ? (
-                        <Animated.View style={[this.props.nopeStyle, animatedNopeStyles]}>
-                            <Text style={this.props.nopeTextStyle}>Nope!</Text>
+                        <Animated.View style={[animatedNopeStyles]}>
+                            <Text>Nope!</Text>
                         </Animated.View>
                     )
                         : null
@@ -207,8 +207,8 @@ class SwipeCards extends Component {
                     : (
                     this.props.showYup
                         ? (
-                        <Animated.View style={[this.props.yupStyle, animatedYupStyles]}>
-                            <Text style={this.props.yupTextStyle}>Yup!</Text>
+                        <Animated.View style={[animatedYupStyles]}>
+                            <Text >Yup!</Text>
                         </Animated.View>
                     )
                         : null
