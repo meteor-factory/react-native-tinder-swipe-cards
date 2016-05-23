@@ -229,11 +229,11 @@ SwipeCards.propTypes = {
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
     handleNope: React.PropTypes.func,
-    containerStyle: React.PropTypes.object,
-    yupStyle: React.PropTypes.object,
-    yupTextStyle: React.PropTypes.object,
-    nopeStyle: React.PropTypes.object,
-    nopeTextStyle: React.PropTypes.object
+    containerStyle: View.PropTypes.style,
+    yupStyle: View.PropTypes.style,
+    yupTextStyle: View.PropTypes.style,
+    nopeStyle: View.PropTypes.style,
+    nopeTextStyle: View.PropTypes.style
 };
 
 SwipeCards.defaultProps = {
