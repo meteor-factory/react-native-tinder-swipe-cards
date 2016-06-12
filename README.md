@@ -1,4 +1,7 @@
 # Tinder Cards for React Native
+
+LOOKING FOR CONTRIBUTORS. I'm not currently using this in any active projects. If anyone wants to be added, please write me.
+
 A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
 
 
