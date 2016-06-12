@@ -45,6 +45,14 @@ class SwipeCards extends Component {
     ).start();
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.cards && nextProps.cards.length > 0){
+      this.setState({
+        card: nextProps.cards[0]
+      })
+    }
+  }
+
   componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
