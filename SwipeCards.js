@@ -18,6 +18,42 @@ import Defaults from './Defaults.js';
 
 var SWIPE_THRESHOLD = 120;
 
+// Base Styles. Use props to override these values
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF'
+    },
+    yup: {
+        borderColor: 'green',
+        borderWidth: 2,
+        position: 'absolute',
+        padding: 20,
+        bottom: 20,
+        borderRadius: 5,
+        right: 20,
+    },
+    yupText: {
+        fontSize: 16,
+        color: 'green',
+    },
+    nope: {
+        borderColor: 'red',
+        borderWidth: 2,
+        position: 'absolute',
+        bottom: 20,
+        padding: 20,
+        borderRadius: 5,
+        left: 20,
+    },
+    nopeText: {
+        fontSize: 16,
+        color: 'red',
+    }
+});
+
 class SwipeCards extends Component {
   constructor(props) {
     super(props);
@@ -220,41 +256,5 @@ SwipeCards.defaultProps = {
     nopeStyle: styles.nope,
     nopeTextStyle: styles.nopeText
 };
-
-// Base Styles. Use props to override these values
-var styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    yup: {
-        borderColor: 'green',
-        borderWidth: 2,
-        position: 'absolute',
-        padding: 20,
-        bottom: 20,
-        borderRadius: 5,
-        right: 20,
-    },
-    yupText: {
-        fontSize: 16,
-        color: 'green',
-    },
-    nope: {
-        borderColor: 'red',
-        borderWidth: 2,
-        position: 'absolute',
-        bottom: 20,
-        padding: 20,
-        borderRadius: 5,
-        left: 20,
-    },
-    nopeText: {
-        fontSize: 16,
-        color: 'red',
-    }
-});
 
 export default SwipeCards
