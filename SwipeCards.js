@@ -55,6 +55,14 @@ class SwipeCards extends Component {
     ).start();
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.cards && nextProps.cards.length > 0){
+      this.setState({
+        card: nextProps.cards[0]
+      })
+    }
+  }
+
   componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
@@ -159,7 +167,7 @@ class SwipeCards extends Component {
               this.props.showNope
               ? (
                 <Animated.View style={[styles.nope, animatedNopeStyles]}>
-                  <Text style={styles.nopeText}>Nope!</Text>
+                  <Text style={styles.nopeText}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
                 </Animated.View>
                 )
               : null
@@ -172,7 +180,7 @@ class SwipeCards extends Component {
               this.props.showYup
               ? (
                 <Animated.View style={[styles.yup, animatedYupStyles]}>
-                  <Text style={styles.yupText}>Yup!</Text>
+                  <Text style={styles.yupText}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
                 </Animated.View>
               )
               : null
@@ -192,7 +200,9 @@ SwipeCards.propTypes = {
   showYup: React.PropTypes.bool,
   showNope: React.PropTypes.bool,
   handleYup: React.PropTypes.func,
-  handleNope: React.PropTypes.func
+  handleNope: React.PropTypes.func,
+  yupText: React.PropTypes.string,
+  noText: React.PropTypes.string,
 };
 
 SwipeCards.defaultProps = {
