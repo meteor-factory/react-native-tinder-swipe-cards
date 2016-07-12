@@ -24,7 +24,7 @@ var styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#F5FCFF'
     },
     yup: {
         borderColor: 'green',
@@ -229,14 +229,14 @@ class SwipeCards extends Component {
 }
 
 SwipeCards.propTypes = {
-  cards: React.PropTypes.array,
-  renderCards: React.PropTypes.func,
-  loop: React.PropTypes.bool,
-  renderNoMoreCards: React.PropTypes.func,
-  showYup: React.PropTypes.bool,
-  showNope: React.PropTypes.bool,
-  handleYup: React.PropTypes.func,
-  handleNope: React.PropTypes.func, 
+    cards: React.PropTypes.array,
+    renderCards: React.PropTypes.func,
+    loop: React.PropTypes.bool,
+    renderNoMoreCards: React.PropTypes.func,
+    showYup: React.PropTypes.bool,
+    showNope: React.PropTypes.bool,
+    handleYup: React.PropTypes.func,
+    handleNope: React.PropTypes.func,
     yupText: React.PropTypes.string,
     noText: React.PropTypes.string,
     containerStyle: View.propTypes.style,
@@ -256,6 +256,5 @@ SwipeCards.defaultProps = {
     nopeStyle: styles.nope,
     nopeTextStyle: styles.nopeText
 };
-
 
 export default SwipeCards
