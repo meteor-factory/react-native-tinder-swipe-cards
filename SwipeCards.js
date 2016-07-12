@@ -202,7 +202,7 @@ SwipeCards.propTypes = {
   handleYup: React.PropTypes.func,
   handleNope: React.PropTypes.func,
   yupText: React.PropTypes.string,
-  noText: React.PropTypes.string,
+  noText: React.PropTypes.string
 };
 
 SwipeCards.defaultProps = {
