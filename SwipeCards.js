@@ -18,6 +18,42 @@ import Defaults from './Defaults.js';
 
 var SWIPE_THRESHOLD = 120;
 
+// Base Styles. Use props to override these values
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    yup: {
+        borderColor: 'green',
+        borderWidth: 2,
+        position: 'absolute',
+        padding: 20,
+        bottom: 20,
+        borderRadius: 5,
+        right: 20,
+    },
+    yupText: {
+        fontSize: 16,
+        color: 'green',
+    },
+    nope: {
+        borderColor: 'red',
+        borderWidth: 2,
+        position: 'absolute',
+        bottom: 20,
+        padding: 20,
+        borderRadius: 5,
+        left: 20,
+    },
+    nopeText: {
+        fontSize: 16,
+        color: 'red',
+    }
+});
+
 class SwipeCards extends Component {
   constructor(props) {
     super(props);
@@ -150,15 +186,15 @@ class SwipeCards extends Component {
     let nopeScale = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0.5], extrapolate: 'clamp'});
     let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity}
 
-    return (
-      <View style={styles.container}>
-        { this.state.card
-            ? (
-            <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
-              {this.renderCard(this.state.card)}
-            </Animated.View>
-            )
-            : this.renderNoMoreCards() }
+        return (
+            <View style={this.props.containerStyle}>
+                { this.state.card
+                    ? (
+                    <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
+                        {this.renderCard(this.state.card)}
+                    </Animated.View>
+                )
+                    : this.renderNoMoreCards() }
 
 
         { this.props.renderNope
@@ -166,8 +202,8 @@ class SwipeCards extends Component {
           : (
               this.props.showNope
               ? (
-                <Animated.View style={[styles.nope, animatedNopeStyles]}>
-                  <Text style={styles.nopeText}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
+                <Animated.View style={[this.props.nopeStyle, animatedNopeStyles]}>
+                  <Text style={this.props.nopeTextStyle}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
                 </Animated.View>
                 )
               : null
@@ -179,8 +215,8 @@ class SwipeCards extends Component {
           : (
               this.props.showYup
               ? (
-                <Animated.View style={[styles.yup, animatedYupStyles]}>
-                  <Text style={styles.yupText}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
+                <Animated.View style={[this.props.yupStyle, animatedYupStyles]}>
+                  <Text style={this.props.yupTextStyle}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
                 </Animated.View>
               )
               : null
@@ -200,51 +236,26 @@ SwipeCards.propTypes = {
   showYup: React.PropTypes.bool,
   showNope: React.PropTypes.bool,
   handleYup: React.PropTypes.func,
-  handleNope: React.PropTypes.func,
-  yupText: React.PropTypes.string,
-  noText: React.PropTypes.string,
+  handleNope: React.PropTypes.func, 
+    yupText: React.PropTypes.string,
+    noText: React.PropTypes.string,
+    containerStyle: View.propTypes.style,
+    yupStyle: View.propTypes.style,
+    yupTextStyle: Text.propTypes.style,
+    nopeStyle: View.propTypes.style,
+    nopeTextStyle: Text.propTypes.style
 };
 
 SwipeCards.defaultProps = {
-  loop: false,
-  showYup: true,
-  showNope: true
+    loop: false,
+    showYup: true,
+    showNope: true,
+    containerStyle: styles.container,
+    yupStyle: styles.yup,
+    yupTextStyle: styles.yupText,
+    nopeStyle: styles.nope,
+    nopeTextStyle: styles.nopeText
 };
 
-
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  yup: {
-    borderColor: 'green',
-    borderWidth: 2,
-    position: 'absolute',
-    padding: 20,
-    bottom: 20,
-    borderRadius: 5,
-    right: 20,
-  },
-  yupText: {
-    fontSize: 16,
-    color: 'green',
-  },
-  nope: {
-    borderColor: 'red',
-    borderWidth: 2,
-    position: 'absolute',
-    bottom: 20,
-    padding: 20,
-    borderRadius: 5,
-    left: 20,
-  },
-  nopeText: {
-    fontSize: 16,
-    color: 'red',
-  }
-});
 
 export default SwipeCards
