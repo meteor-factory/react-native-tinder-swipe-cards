@@ -227,6 +227,10 @@ const styles = StyleSheet.create({
 | yupTextStyle      | style | Override default style                                  |         |
 | nopeStyle         | style | Override default style                                  |         |
 | nopeTextStyle     | style | Override default style                                  |         |
+| yupView           | element | React component to render on a Yes vote                                 |         |
+| yupText           | string  | Text to render on Yes vote                                  |         |
+| noView           | element | React component to render on a No vote                                 |         |
+| noText           | string  | Text to render on No vote                                  |         |
 
 *required
 

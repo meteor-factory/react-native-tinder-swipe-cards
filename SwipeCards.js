@@ -197,33 +197,39 @@ class SwipeCards extends Component {
                     : this.renderNoMoreCards() }
 
 
-        { this.props.renderNope
-          ? this.props.renderNope(pan)
-          : (
-              this.props.showNope
-              ? (
-                <Animated.View style={[this.props.nopeStyle, animatedNopeStyles]}>
-                  <Text style={this.props.nopeTextStyle}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
-                </Animated.View>
-                )
-              : null
-            )
-        }
+                { this.props.renderNope
+                  ? this.props.renderNope(pan)
+                  : (
+                      this.props.showNope
+                      ? (
+                        <Animated.View style={[this.props.nopeStyle, animatedNopeStyles]}>
+                            {this.props.noView
+                                ? this.props.noView
+                                : <Text style={this.props.nopeTextStyle}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
+                            }
+                        </Animated.View>
+                        )
+                      : null
+                    )
+                }
 
-        { this.props.renderYup
-          ? this.props.renderYup(pan)
-          : (
-              this.props.showYup
-              ? (
-                <Animated.View style={[this.props.yupStyle, animatedYupStyles]}>
-                  <Text style={this.props.yupTextStyle}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
-                </Animated.View>
-              )
-              : null
-            )
-        }
+                { this.props.renderYup
+                  ? this.props.renderYup(pan)
+                  : (
+                      this.props.showYup
+                      ? (
+                        <Animated.View style={[this.props.yupStyle, animatedYupStyles]}>
+                            {this.props.yupView
+                                ? this.props.yupView
+                                : <Text style={this.props.yupTextStyle}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
+                            }
+                        </Animated.View>
+                      )
+                      : null
+                    )
+                }
 
-      </View>
+            </View>
     );
   }
 }
@@ -237,7 +243,9 @@ SwipeCards.propTypes = {
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
     handleNope: React.PropTypes.func,
+    yupView: React.PropTypes.element,
     yupText: React.PropTypes.string,
+    noView: React.PropTypes.element,
     noText: React.PropTypes.string,
     containerStyle: View.propTypes.style,
     yupStyle: View.propTypes.style,
