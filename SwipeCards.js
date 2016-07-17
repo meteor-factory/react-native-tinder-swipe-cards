@@ -4,12 +4,12 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet,
-    Text,
-    View,
-    Animated,
-    PanResponder,
-    Image
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  PanResponder,
+  Image
 } from 'react-native';
 
 import clamp from 'clamp';
@@ -36,13 +36,17 @@ export default class SwipeCards extends Component {
   static defaultProps = {
     cards: [],
     loop: false,
+    stack: false,
+    stackDepth: 5,
+    stackOffsetX: 25,
+    stackOffsetY: 0,
     showYup: true,
     showNope: true,
     nopeText: "Nope!",
     yupText: "Yup!",
     handleNope: (card) => null,
     handleYup: (card) => null,
-    cardRemoved: (card) => null,
+    cardRemoved: (ix) => null,
     renderCard: (card) => null
   };
 
@@ -53,18 +57,22 @@ export default class SwipeCards extends Component {
       pan: new Animated.ValueXY(),
       enter: new Animated.Value(0.5),
       card: this.props.cards[0],
-    }
+    };
+  }
+
+  get currentIndex() {
+    return this.props.cards.indexOf(this.state.card);
   }
 
   _goToNextCard() {
-    let currentCardIdx = this.props.cards.indexOf(this.state.card);
-    let newIdx = currentCardIdx + 1;
+    let newIdx = this.currentIndex + 1;
 
     // Checks to see if last card.
     // If props.loop=true, will start again from the first card.
     let card = newIdx > this.props.cards.length - 1
-      ? this.props.loop ? this.props.cards[0] : null
-      : this.props.cards[newIdx];
+        ? this.props.loop ? this.props.cards[0] : null
+        : this.props.cards[newIdx]
+      ;
 
     this.setState({
       card: card
@@ -78,7 +86,7 @@ export default class SwipeCards extends Component {
   _animateEntrance() {
     Animated.spring(
       this.state.enter,
-      { toValue: 1, friction: 8 }
+      {toValue: 1, friction: 8}
     ).start();
   }
 
@@ -122,7 +130,7 @@ export default class SwipeCards extends Component {
             this.props.handleNope(this.state.card);
           }
 
-          this.props.cardRemoved(this.props.cards.indexOf(this.state.card));
+          this.props.cardRemoved(this.currentIndex);
 
           Animated.decay(this.state.pan, {
             velocity: {x: velocity, y: vy},
@@ -141,8 +149,8 @@ export default class SwipeCards extends Component {
   _resetState() {
     this.state.pan.setValue({x: 0, y: 0});
     this.state.enter.setValue(0);
-    this._goToNextCard();
     this._animateEntrance();
+    this._goToNextCard();
   }
 
   renderNoMoreCards() {
@@ -153,23 +161,93 @@ export default class SwipeCards extends Component {
     return <Defaults.NoMoreCards />;
   }
 
-  renderCard() {
-    if (this.state.card) {
-      let {pan, enter as scale} = this.state;
-
-      let [translateX, translateY] = [pan.x, pan.y];
-
-      let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
-      let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
-
-      let animatedCardStyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
-
-      return <Animated.View style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
-        {this.props.renderCard(this.state.card)}
-      </Animated.View>
+  /**
+   * Renders the cards as a stack with props.stackDepth cards deep.
+   */
+  renderStack() {
+    if (!this.state.card) {
+      return this.renderNoMoreCards();
     }
 
-    return this.renderNoMoreCards();
+    //Get the next stack of cards to render.
+    let cards = this.props.cards.slice(this.currentIndex, this.props.stackDepth).reverse();
+    return cards.map((card, i) => {
+
+      let offsetX = this.props.stackOffsetX * cards.length - i * this.props.stackOffsetX;
+      let lastOffsetX = offsetX + this.props.stackOffsetX;
+
+      let offsetY = this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY;
+      let lastOffsetY = offsetY + this.props.stackOffsetY;
+
+      let opacity = 0.25 + (0.75 / cards.length) * (i + 1);
+      let lastOpacity = 0.25 + (0.75 / cards.length) * i ;
+
+      let scale = 0.8 + (0.15 / cards.length) * (i + 1);
+      let lastScale = 0.8 + (0.15 / cards.length) * i;
+
+      let style = {
+        position: 'absolute',
+        top: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOffsetY, offsetY]}),
+        left: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOffsetX, offsetX]}),
+        opacity: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOpacity, opacity]}),
+        transform: [{scale: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastScale, scale]})}],
+        overflow: 'visible',
+        elevation: i * 10,
+        shadowColor: "#000000",
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        shadowOffset: {
+          height: 1,
+          width: 1
+        }
+      };
+
+      //Is this the top card?  If so animate it and hook up the pan handlers.
+      if (i+1 === cards.length) {
+        let {pan} = this.state;
+        let [translateX, translateY] = [pan.x, pan.y];
+
+        let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
+        let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+
+        let animatedCardStyles = {
+          ... style,
+          transform: [
+            {translateX: translateX},
+            {translateY: translateY},
+            {rotate: rotate},
+            {scale: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastScale, scale]})}
+          ],
+          opacity: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOpacity, opacity]})
+        };
+
+        return <Animated.View key={"top"} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+          {this.props.renderCard(this.state.card)}
+        </Animated.View>;
+      }
+
+      return <Animated.View key={'card_' + i} style={style}>{this.props.renderCard(card)}</Animated.View>;
+    });
+  }
+
+  renderCard() {
+    if (!this.state.card) {
+      return this.renderNoMoreCards();
+    }
+
+    let {pan, enter} = this.state;
+    let [translateX, translateY] = [pan.x, pan.y];
+
+    let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
+    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+
+    let scale = enter;
+
+    let animatedCardStyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
+
+    return <Animated.View key={"top"} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+      {this.props.renderCard(this.state.card)}
+    </Animated.View>;
   }
 
   renderNope() {
@@ -215,7 +293,7 @@ export default class SwipeCards extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.renderCard()}
+        {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderNope()}
         {this.renderYup()}
       </View>
@@ -228,7 +306,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'transparent',
   },
   yup: {
     borderColor: 'green',
