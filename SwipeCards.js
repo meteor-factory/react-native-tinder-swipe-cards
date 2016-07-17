@@ -16,9 +16,36 @@ import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
-var SWIPE_THRESHOLD = 120;
+const SWIPE_THRESHOLD = 120;
 
-class SwipeCards extends Component {
+export default class SwipeCards extends Component {
+
+  static propTypes = {
+    cards: React.PropTypes.array,
+    renderCards: React.PropTypes.func,
+    loop: React.PropTypes.bool,
+    renderNoMoreCards: React.PropTypes.func,
+    showYup: React.PropTypes.bool,
+    showNope: React.PropTypes.bool,
+    handleYup: React.PropTypes.func,
+    handleNope: React.PropTypes.func,
+    yupText: React.PropTypes.string,
+    noText: React.PropTypes.string,
+  };
+
+  static defaultProps = {
+    cards: [],
+    loop: false,
+    showYup: true,
+    showNope: true,
+    nopeText: "Nope!",
+    yupText: "Yup!",
+    handleNope: (card) => null,
+    handleYup: (card) => null,
+    cardRemoved: (card) => null,
+    renderCard: (card) => null
+  };
+
   constructor(props) {
     super(props);
 
@@ -79,7 +106,7 @@ class SwipeCards extends Component {
 
       onPanResponderRelease: (e, {vx, vy}) => {
         this.state.pan.flattenOffset();
-        var velocity;
+        let velocity;
 
         if (vx >= 0) {
           velocity = clamp(vx, 3, 5);
@@ -89,13 +116,13 @@ class SwipeCards extends Component {
 
         if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD) {
 
-          this.state.pan.x._value > 0
-            ? this.props.handleYup(this.state.card)
-            : this.props.handleNope(this.state.card)
+          if (this.state.pan.x._value > 0) {
+            this.props.handleYup(this.state.card);
+          } else {
+            this.props.handleNope(this.state.card);
+          }
 
-          this.props.cardRemoved
-            ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
-            : null
+          this.props.cardRemoved(this.props.cards.indexOf(this.state.card));
 
           Animated.decay(this.state.pan, {
             velocity: {x: velocity, y: vy},
@@ -105,7 +132,7 @@ class SwipeCards extends Component {
           Animated.spring(this.state.pan, {
             toValue: {x: 0, y: 0},
             friction: 4
-          }).start()
+          }).start();
         }
       }
     })
@@ -119,100 +146,84 @@ class SwipeCards extends Component {
   }
 
   renderNoMoreCards() {
-    if (this.props.renderNoMoreCards)
+    if (this.props.renderNoMoreCards) {
       return this.props.renderNoMoreCards();
+    }
 
-    return (
-      <Defaults.NoMoreCards />
-    )
+    return <Defaults.NoMoreCards />;
   }
 
-  renderCard(cardData) {
-    return this.props.renderCard(cardData)
+  renderCard() {
+    if (this.state.card) {
+      let {pan, enter as scale} = this.state;
+
+      let [translateX, translateY] = [pan.x, pan.y];
+
+      let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
+      let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+
+      let animatedCardStyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
+
+      return <Animated.View style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+        {this.props.renderCard(this.state.card)}
+      </Animated.View>
+    }
+
+    return this.renderNoMoreCards();
   }
 
-  render() {
-    let { pan, enter, } = this.state;
-
-    let [translateX, translateY] = [pan.x, pan.y];
-
-    let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
-    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
-    let scale = enter;
-
-    let animatedCardstyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
-
-    let yupOpacity = pan.x.interpolate({inputRange: [0, 150], outputRange: [0, 1]});
-    let yupScale = pan.x.interpolate({inputRange: [0, 150], outputRange: [0.5, 1], extrapolate: 'clamp'});
-    let animatedYupStyles = {transform: [{scale: yupScale}], opacity: yupOpacity}
+  renderNope() {
+    let {pan} = this.state;
 
     let nopeOpacity = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0]});
     let nopeScale = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0.5], extrapolate: 'clamp'});
-    let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity}
+    let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity};
 
+    if (this.props.renderNope) {
+      return this.props.renderNope(pan);
+    }
+
+    if (this.props.showNope) {
+      return <Animated.View style={[styles.nope, animatedNopeStyles]}>
+        <Text style={styles.nopeText}>{this.props.noText}</Text>
+      </Animated.View>;
+    }
+
+    return null;
+  }
+
+  renderYup() {
+    let {pan} = this.state;
+
+    let yupOpacity = pan.x.interpolate({inputRange: [0, 150], outputRange: [0, 1]});
+    let yupScale = pan.x.interpolate({inputRange: [0, 150], outputRange: [0.5, 1], extrapolate: 'clamp'});
+    let animatedYupStyles = {transform: [{scale: yupScale}], opacity: yupOpacity};
+
+    if (this.props.renderYup) {
+      return this.props.renderYup(pan);
+    }
+
+    if (this.props.showYup) {
+      return <Animated.View style={[styles.yup, animatedYupStyles]}>
+        <Text style={styles.yupText}>{this.props.yupText}</Text>
+      </Animated.View>;
+    }
+
+    return null;
+  }
+
+  render() {
     return (
       <View style={styles.container}>
-        { this.state.card
-            ? (
-            <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
-              {this.renderCard(this.state.card)}
-            </Animated.View>
-            )
-            : this.renderNoMoreCards() }
-
-
-        { this.props.renderNope
-          ? this.props.renderNope(pan)
-          : (
-              this.props.showNope
-              ? (
-                <Animated.View style={[styles.nope, animatedNopeStyles]}>
-                  <Text style={styles.nopeText}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
-                </Animated.View>
-                )
-              : null
-            )
-        }
-
-        { this.props.renderYup
-          ? this.props.renderYup(pan)
-          : (
-              this.props.showYup
-              ? (
-                <Animated.View style={[styles.yup, animatedYupStyles]}>
-                  <Text style={styles.yupText}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
-                </Animated.View>
-              )
-              : null
-            )
-        }
-
+        {this.renderCard()}
+        {this.renderNope()}
+        {this.renderYup()}
       </View>
     );
   }
 }
 
-SwipeCards.propTypes = {
-  cards: React.PropTypes.array,
-  renderCards: React.PropTypes.func,
-  loop: React.PropTypes.bool,
-  renderNoMoreCards: React.PropTypes.func,
-  showYup: React.PropTypes.bool,
-  showNope: React.PropTypes.bool,
-  handleYup: React.PropTypes.func,
-  handleNope: React.PropTypes.func,
-  yupText: React.PropTypes.string,
-  noText: React.PropTypes.string,
-};
-
-SwipeCards.defaultProps = {
-  loop: false,
-  showYup: true,
-  showNope: true
-};
-
-
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -246,5 +257,3 @@ var styles = StyleSheet.create({
     color: 'red',
   }
 });
-
-export default SwipeCards
