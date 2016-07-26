@@ -18,6 +18,42 @@ import Defaults from './Defaults.js';
 
 const SWIPE_THRESHOLD = 120;
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  yup: {
+    borderColor: 'green',
+    borderWidth: 2,
+    position: 'absolute',
+    padding: 20,
+    bottom: 20,
+    borderRadius: 5,
+    right: 20,
+  },
+  yupText: {
+    fontSize: 16,
+    color: 'green',
+  },
+  nope: {
+    borderColor: 'red',
+    borderWidth: 2,
+    position: 'absolute',
+    bottom: 20,
+    padding: 20,
+    borderRadius: 5,
+    left: 20,
+  },
+  nopeText: {
+    fontSize: 16,
+    color: 'red',
+  }
+});
+
+
 export default class SwipeCards extends Component {
 
   static propTypes = {
@@ -36,7 +72,7 @@ export default class SwipeCards extends Component {
     renderNoMoreCards: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
     yupText: React.PropTypes.string,
-    noText: React.PropTypes.string,
+    noText: React.PropTypes.string
   };
 
   static defaultProps = {
@@ -54,7 +90,8 @@ export default class SwipeCards extends Component {
     handleNope: (card) => null,
     handleYup: (card) => null,
     cardRemoved: (ix) => null,
-    renderCard: (card) => null
+    renderCard: (card) => null,
+    style: styles.container
   };
 
   constructor(props) {
@@ -63,12 +100,13 @@ export default class SwipeCards extends Component {
     this.state = {
       pan: new Animated.ValueXY(),
       enter: new Animated.Value(0.5),
+      cards: this.props.cards,
       card: this.props.cards[0],
     };
   }
 
   get currentIndex() {
-    return this.props.cards.indexOf(this.state.card);
+    return this.state.cards.indexOf(this.state.card);
   }
 
   _goToNextCard() {
@@ -76,9 +114,9 @@ export default class SwipeCards extends Component {
 
     // Checks to see if last card.
     // If props.loop=true, will start again from the first card.
-    let card = newIdx > this.props.cards.length - 1
-        ? this.props.loop ? this.props.cards[0] : null
-        : this.props.cards[newIdx]
+    let card = newIdx > this.state.cards.length - 1
+        ? this.props.loop ? this.state.cards[0] : null
+        : this.state.cards[newIdx]
       ;
 
     this.setState({
@@ -98,10 +136,11 @@ export default class SwipeCards extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.cards && nextProps.cards.length > 0) {
+    if (nextProps.cards !== this.props.cards) {
       this.setState({
+        cards: [].concat(nextProps.cards),
         card: nextProps.cards[0]
-      })
+      });
     }
   }
 
@@ -189,7 +228,7 @@ export default class SwipeCards extends Component {
     }
 
     //Get the next stack of cards to render.
-    let cards = this.props.cards.slice(this.currentIndex, this.currentIndex + this.props.stackDepth).reverse();
+    let cards = this.state.cards.slice(this.currentIndex, this.currentIndex + this.props.stackDepth).reverse();
 
     return cards.map((card, i) => {
 
@@ -202,8 +241,8 @@ export default class SwipeCards extends Component {
       let opacity = 0.25 + (0.75 / cards.length) * (i + 1);
       let lastOpacity = 0.25 + (0.75 / cards.length) * i ;
 
-      let scale = 0.8 + (0.15 / cards.length) * (i + 1);
-      let lastScale = 0.8 + (0.15 / cards.length) * i;
+      let scale = 0.85 + (0.15 / cards.length) * (i + 1);
+      let lastScale = 0.85 + (0.15 / cards.length) * i;
 
       let style = {
         position: 'absolute',
@@ -311,38 +350,3 @@ export default class SwipeCards extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  yup: {
-    borderColor: 'green',
-    borderWidth: 2,
-    position: 'absolute',
-    padding: 20,
-    bottom: 20,
-    borderRadius: 5,
-    right: 20,
-  },
-  yupText: {
-    fontSize: 16,
-    color: 'green',
-  },
-  nope: {
-    borderColor: 'red',
-    borderWidth: 2,
-    position: 'absolute',
-    bottom: 20,
-    padding: 20,
-    borderRadius: 5,
-    left: 20,
-  },
-  nopeText: {
-    fontSize: 16,
-    color: 'red',
-  }
-});
