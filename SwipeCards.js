@@ -53,6 +53,9 @@ const styles = StyleSheet.create({
   }
 });
 
+//Components could be unloaded and loaded and we will loose the users currentIndex, we can persist it here.
+let currentIndex = {};
+let guid = 0;
 
 export default class SwipeCards extends Component {
 
@@ -61,6 +64,7 @@ export default class SwipeCards extends Component {
     cardKey: React.PropTypes.string,
     loop: React.PropTypes.bool,
     stack: React.PropTypes.bool,
+    stackGuid: React.PropTypes.string,
     stackDepth: React.PropTypes.number,
     stackOffsetX: React.PropTypes.number,
     stackOffsetY: React.PropTypes.number,
@@ -97,54 +101,17 @@ export default class SwipeCards extends Component {
   constructor(props) {
     super(props);
 
+    //Use a persistent variable to track currentIndex instead of a local one.
+    this.guid = this.props.guid || guid++;
+    if (!currentIndex[this.guid]) currentIndex[this.guid] = 0;
+
     this.state = {
       pan: new Animated.ValueXY(),
       enter: new Animated.Value(0.5),
-      cards: this.props.cards,
-      card: this.props.cards[0],
+      cards: [].concat(this.props.cards),
+      card: this.props.cards[currentIndex[this.guid]],
     };
-  }
 
-  get currentIndex() {
-    return this.state.cards.indexOf(this.state.card);
-  }
-
-  _goToNextCard() {
-    let newIdx = this.currentIndex + 1;
-
-    // Checks to see if last card.
-    // If props.loop=true, will start again from the first card.
-    let card = newIdx > this.state.cards.length - 1
-        ? this.props.loop ? this.state.cards[0] : null
-        : this.state.cards[newIdx]
-      ;
-
-    this.setState({
-      card: card
-    });
-  }
-
-  componentDidMount() {
-    this._animateEntrance();
-  }
-
-  _animateEntrance() {
-    Animated.spring(
-      this.state.enter,
-      {toValue: 1, friction: 8}
-    ).start();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.cards !== this.props.cards) {
-      this.setState({
-        cards: [].concat(nextProps.cards),
-        card: nextProps.cards[0]
-      });
-    }
-  }
-
-  componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture: () => true,
@@ -184,7 +151,7 @@ export default class SwipeCards extends Component {
             return;
           };
 
-          this.props.cardRemoved(this.currentIndex);
+          this.props.cardRemoved(currentIndex[this.guid]);
 
           Animated.decay(this.state.pan, {
             velocity: {x: velocity, y: vy},
@@ -194,7 +161,43 @@ export default class SwipeCards extends Component {
           this._resetPan();
         }
       }
-    })
+    });
+  }
+
+  _goToNextCard() {
+    currentIndex[this.guid]++;
+
+    // Checks to see if last card.
+    // If props.loop=true, will start again from the first card.
+    if (currentIndex[this.guid] > this.state.cards.length - 1 && this.props.loop) {
+      currentIndex[this.guid] = 0;
+    }
+
+    this.setState({
+      card: this.state.cards[currentIndex[this.guid]]
+    });
+  }
+
+  componentDidMount() {
+    this._animateEntrance();
+  }
+
+  _animateEntrance() {
+    Animated.spring(
+      this.state.enter,
+      {toValue: 1, friction: 8}
+    ).start();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.cards !== this.props.cards) {
+      console.log('setting cards', this.props.cards, nextProps.cards);
+
+      this.setState({
+        cards: [].concat(nextProps.cards),
+        card: nextProps.cards[0]
+      });
+    }
   }
 
   _resetPan() {
@@ -228,7 +231,7 @@ export default class SwipeCards extends Component {
     }
 
     //Get the next stack of cards to render.
-    let cards = this.state.cards.slice(this.currentIndex, this.currentIndex + this.props.stackDepth).reverse();
+    let cards = this.state.cards.slice(currentIndex[this.guid], currentIndex[this.guid] + this.props.stackDepth).reverse();
 
     return cards.map((card, i) => {
 
@@ -272,7 +275,7 @@ export default class SwipeCards extends Component {
         };
 
         return <Animated.View key={card[this.props.cardKey]} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
-                              {this.props.renderCard(this.state.card)}
+          {this.props.renderCard(this.state.card)}
         </Animated.View>;
       }
 
@@ -296,7 +299,7 @@ export default class SwipeCards extends Component {
     let animatedCardStyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
 
     return <Animated.View key={"top"} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
-                          {this.props.renderCard(this.state.card)}
+      {this.props.renderCard(this.state.card)}
     </Animated.View>;
   }
 
@@ -343,9 +346,9 @@ export default class SwipeCards extends Component {
   render() {
     return (
       <View style={styles.container}>
-            {this.props.stack ? this.renderStack() : this.renderCard()}
-            {this.renderNope()}
-            {this.renderYup()}
+        {this.props.stack ? this.renderStack() : this.renderCard()}
+        {this.renderNope()}
+        {this.renderYup()}
       </View>
     );
   }
