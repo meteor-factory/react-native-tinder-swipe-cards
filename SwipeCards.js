@@ -200,7 +200,6 @@ export default class SwipeCards extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cards !== this.props.cards) {
-      console.log('setting cards', this.props.cards, nextProps.cards);
 
       this.setState({
         cards: [].concat(nextProps.cards),
