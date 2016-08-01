@@ -112,9 +112,18 @@ export default class SwipeCards extends Component {
       card: this.props.cards[currentIndex[this.guid]],
     };
 
+    this.lastX = 0;
+    this.lastY = 0;
+
     this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
+      onStartShouldSetPanResponderCapture: (e, gestureState) => {
+        this.lastX = e.nativeEvent.locationX;
+        this.lastY = e.nativeEvent.locationY;
+        return false;
+      },
+      onMoveShouldSetPanResponderCapture: (e, gestureState) => {
+        return (Math.abs(this.lastX - e.nativeEvent.locationX) > 5 || Math.abs(this.lastY - e.nativeEvent.locationY) > 5);
+      },
 
       onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value});
