@@ -115,6 +115,8 @@ export default class SwipeCards extends Component {
     this.lastX = 0;
     this.lastY = 0;
 
+    this.cardAnimation = null;
+
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (e, gestureState) => {
         this.lastX = gestureState.moveX;
@@ -162,10 +164,18 @@ export default class SwipeCards extends Component {
 
           this.props.cardRemoved(currentIndex[this.guid]);
 
-          Animated.decay(this.state.pan, {
+          this.cardAnimation = Animated.decay(this.state.pan, {
             velocity: {x: velocity, y: vy},
             deceleration: 0.98
-          }).start(this._resetState.bind(this))
+          });
+          this.cardAnimation.start( status => {
+              if (status.finished) this._advanceState();
+              else this._resetState();
+
+              this.cardAnimation = null;
+            }
+          );
+
         } else {
           this._resetPan();
         }
@@ -200,7 +210,11 @@ export default class SwipeCards extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cards !== this.props.cards) {
-      console.log('setting cards', this.props.cards, nextProps.cards);
+
+      if (this.cardAnimation) {
+        this.cardAnimation.stop();
+        this.cardAnimation = null;
+      }
 
       this.setState({
         cards: [].concat(nextProps.cards),
@@ -217,6 +231,12 @@ export default class SwipeCards extends Component {
   }
 
   _resetState() {
+    this.state.pan.setValue({x: 0, y: 0});
+    this.state.enter.setValue(0);
+    this._animateEntrance();
+  }
+
+  _advanceState() {
     this.state.pan.setValue({x: 0, y: 0});
     this.state.enter.setValue(0);
     this._animateEntrance();
