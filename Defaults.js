@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
   noMoreCardsText: {
     fontSize: 22,
   }
-})
+});
