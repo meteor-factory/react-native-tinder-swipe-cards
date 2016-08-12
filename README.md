@@ -19,7 +19,8 @@ A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@b
 // Tinder.js
 'use strict';
 
-import React, {StyleSheet, Text, View, Image} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
 
