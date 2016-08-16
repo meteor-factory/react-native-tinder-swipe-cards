@@ -110,9 +110,6 @@ class SwipeCards extends Component {
         this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value});
         this.state.pan.setValue({x: 0, y: 0});
       },
-      ttt:()=>{
-        alert("ttt");
-      },
 
       onPanResponderMove: Animated.event([
         null, {dx: this.state.pan.x, dy: this.state.pan.y},
