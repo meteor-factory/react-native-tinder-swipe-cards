@@ -60,7 +60,7 @@ class SwipeCards extends Component {
 
     this.state = {
       pan: new Animated.ValueXY(),
-      enter: new Animated.Value(0.5)
+      enter: new Animated.Value(0.5),
       card: this.props.cards ? this.props.cards[0] : null,
     }
   }
@@ -192,7 +192,7 @@ class SwipeCards extends Component {
             <View style={this.props.containerStyle}>
                 { this.state.card
                     ? (
-                    <Animated.View style={[styles.card, animatedCardstyles]} {...this._panResponder.panHandlers}>
+                    <Animated.View style={[this.props.cardStyle, animatedCardstyles]} {...this._panResponder.panHandlers}>
                         {this.renderCard(this.state.card)}
                     </Animated.View>
                 )
@@ -250,6 +250,7 @@ SwipeCards.propTypes = {
     noView: React.PropTypes.element,
     noText: React.PropTypes.string,
     containerStyle: View.propTypes.style,
+    cardStyle: View.propTypes.style,
     yupStyle: View.propTypes.style,
     yupTextStyle: Text.propTypes.style,
     nopeStyle: View.propTypes.style,
