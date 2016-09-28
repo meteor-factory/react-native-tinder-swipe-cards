@@ -69,6 +69,7 @@ export default class SwipeCards extends Component {
     stackOffsetX: React.PropTypes.number,
     stackOffsetY: React.PropTypes.number,
     paddingTop: React.PropTypes.number,
+    swipeStartThreshold: React.PropTypes.number,
     showYup: React.PropTypes.bool,
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
@@ -89,6 +90,7 @@ export default class SwipeCards extends Component {
     stackOffsetX: 25,
     stackOffsetY: 0,
     paddingTop: 0,
+    swipeStartThreshold: 5,
     showYup: true,
     showNope: true,
     nopeText: "Nope!",
@@ -126,7 +128,8 @@ export default class SwipeCards extends Component {
         return false;
       },
       onMoveShouldSetPanResponderCapture: (e, gestureState) => {
-        return (Math.abs(this.lastX - gestureState.moveX) > 5 || Math.abs(this.lastY - gestureState.moveY) > 5);
+        return ((Math.abs(this.lastX - gestureState.moveX) > this.props.swipeStartThreshold)
+               || (Math.abs(this.lastY - gestureState.moveY) > this.props.swipeStartThreshold));
       },
 
       onPanResponderGrant: (e, gestureState) => {
