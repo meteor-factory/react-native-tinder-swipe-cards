@@ -64,6 +64,7 @@ export default class SwipeCards extends Component {
     stackDepth: React.PropTypes.number,
     stackOffsetX: React.PropTypes.number,
     stackOffsetY: React.PropTypes.number,
+    paddingTop: React.PropTypes.number,
     showYup: React.PropTypes.bool,
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
@@ -83,6 +84,7 @@ export default class SwipeCards extends Component {
     stackDepth: 5,
     stackOffsetX: 25,
     stackOffsetY: 0,
+    paddingTop: 0,
     showYup: true,
     showNope: true,
     nopeText: "Nope!",
@@ -246,7 +248,7 @@ export default class SwipeCards extends Component {
 
       let style = {
         position: 'absolute',
-        top: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOffsetY, offsetY]}),
+        top: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOffsetY + this.props.paddingTop, offsetY + this.props.paddingTop]}),
         left: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOffsetX, offsetX]}),
         opacity: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastOpacity, opacity]}),
         transform: [{scale: this.state.enter.interpolate({inputRange: [0, 1], outputRange: [lastScale, scale]})}],
