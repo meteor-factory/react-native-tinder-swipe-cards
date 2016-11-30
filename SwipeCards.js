@@ -87,7 +87,7 @@ class SwipeCards extends Component {
   _animateEntrance() {
     Animated.spring(
       this.state.enter,
-      { toValue: 1, friction: 8 }
+      { toValue: 1, friction: frictionValue }
     ).start();
   }
 
@@ -254,7 +254,8 @@ SwipeCards.propTypes = {
     yupStyle: View.propTypes.style,
     yupTextStyle: Text.propTypes.style,
     nopeStyle: View.propTypes.style,
-    nopeTextStyle: Text.propTypes.style
+    nopeTextStyle: Text.propTypes.style,
+    frictionValue: React.PropTypes.number
 };
 
 SwipeCards.defaultProps = {
@@ -265,7 +266,8 @@ SwipeCards.defaultProps = {
     yupStyle: styles.yup,
     yupTextStyle: styles.yupText,
     nopeStyle: styles.nope,
-    nopeTextStyle: styles.nopeText
+    nopeTextStyle: styles.nopeText,
+    frictionValue: 8
 };
 
 export default SwipeCards
