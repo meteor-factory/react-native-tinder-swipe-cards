@@ -87,7 +87,7 @@ class SwipeCards extends Component {
   _animateEntrance() {
     Animated.spring(
       this.state.enter,
-      { toValue: 1, friction: frictionValue }
+      { toValue: 1, friction: this.props.frictionValue }
     ).start();
   }
 
@@ -112,7 +112,7 @@ class SwipeCards extends Component {
       },
 
       onPanResponderMove: Animated.event([
-        null, {dx: this.state.pan.x, dy: this.state.pan.y},
+        null, {dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0},
       ]),
 
       onPanResponderRelease: (e, {vx, vy}) => {
@@ -128,8 +128,21 @@ class SwipeCards extends Component {
         if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD) {
 
           this.state.pan.x._value > 0
-            ? this.props.handleYup(this.state.card)
-            : this.props.handleNope(this.state.card)
+            ? this.props.handleRight(this.state.card)
+            : this.props.handleLeft(this.state.card)
+
+          this.props.cardRemoved
+            ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
+            : null
+
+          Animated.decay(this.state.pan, {
+            velocity: {x: velocity, y: vy},
+            deceleration: 0.98
+          }).start(this._resetState.bind(this))
+        } else if(Math.abs(this.state.pan.y._value) > SWIPE_THRESHOLD) {
+          this.state.pan.y._value > 0
+            ? this.props.handleDown(this.state.card)
+            : this.props.handleUp(this.state.card)
 
           this.props.cardRemoved
             ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
@@ -174,7 +187,7 @@ class SwipeCards extends Component {
 
     let [translateX, translateY] = [pan.x, pan.y];
 
-    let rotate = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]});
+    let rotate = this.props.rotation ? pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]}) : '0deg';
     let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
     let scale = enter;
 
@@ -243,8 +256,10 @@ SwipeCards.propTypes = {
     renderNoMoreCards: React.PropTypes.func,
     showYup: React.PropTypes.bool,
     showNope: React.PropTypes.bool,
-    handleYup: React.PropTypes.func,
-    handleNope: React.PropTypes.func,
+    handleRight: React.PropTypes.func,
+    handleLeft: React.PropTypes.func,
+    handleUp: React.PropTypes.func,
+    handleDown: React.PropTypes.func,
     yupView: React.PropTypes.element,
     yupText: React.PropTypes.string,
     noView: React.PropTypes.element,
@@ -255,7 +270,9 @@ SwipeCards.propTypes = {
     yupTextStyle: Text.propTypes.style,
     nopeStyle: View.propTypes.style,
     nopeTextStyle: Text.propTypes.style,
-    frictionValue: React.PropTypes.number
+    frictionValue: React.PropTypes.number,
+    rotation: React.PropTypes.bool,
+    dragY: React.PropTypes.bool
 };
 
 SwipeCards.defaultProps = {
@@ -267,7 +284,9 @@ SwipeCards.defaultProps = {
     yupTextStyle: styles.yupText,
     nopeStyle: styles.nope,
     nopeTextStyle: styles.nopeText,
-    frictionValue: 8
+    frictionValue: 10,
+    rotation: true,
+    dragY: true
 };
 
 export default SwipeCards
