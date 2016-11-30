@@ -112,7 +112,7 @@ class SwipeCards extends Component {
       },
 
       onPanResponderMove: Animated.event([
-        null, {dx: this.state.pan.x, dy: this.state.pan.y},
+        null, {dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0},
       ]),
 
       onPanResponderRelease: (e, {vx, vy}) => {
@@ -254,7 +254,8 @@ SwipeCards.propTypes = {
     yupStyle: View.propTypes.style,
     yupTextStyle: Text.propTypes.style,
     nopeStyle: View.propTypes.style,
-    nopeTextStyle: Text.propTypes.style
+    nopeTextStyle: Text.propTypes.style,
+    dragY: React.PropTypes.bool
 };
 
 SwipeCards.defaultProps = {
@@ -265,7 +266,8 @@ SwipeCards.defaultProps = {
     yupStyle: styles.yup,
     yupTextStyle: styles.yupText,
     nopeStyle: styles.nope,
-    nopeTextStyle: styles.nopeText
+    nopeTextStyle: styles.nopeText,
+    dragY: true
 };
 
 export default SwipeCards
