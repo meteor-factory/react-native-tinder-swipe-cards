@@ -16,7 +16,8 @@ import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
-var SWIPE_THRESHOLD = 120;
+var HORIZONTAL_TRESHOLD = 120;
+var VERTICAL_TRESHOLD = 100;
 
 // Base Styles. Use props to override these values
 var styles = StyleSheet.create({
@@ -60,7 +61,7 @@ class SwipeCards extends Component {
 
     this.state = {
       pan: new Animated.ValueXY(),
-      enter: new Animated.Value(0.5),
+      enter: new Animated.Value(0),
       card: this.props.cards ? this.props.cards[0] : null,
     }
   }
@@ -89,6 +90,20 @@ class SwipeCards extends Component {
       this.state.enter,
       { toValue: 1, friction: this.props.frictionValue }
     ).start();
+  }
+
+  _animateExit(velocity, vy) {
+    Animated.decay(this.state.pan, {
+      velocity: {x: velocity, y: vy},
+      deceleration: 0.98
+    }).start(this._resetState.bind(this))
+  }
+
+  _returnToCenter() {
+    Animated.spring(this.state.pan, {
+      toValue: {x: 0, y: 0},
+      friction: 4
+    }).start()
   }
 
   componentWillReceiveProps(nextProps){
@@ -120,12 +135,12 @@ class SwipeCards extends Component {
         var velocity;
 
         if (vx >= 0) {
-          velocity = clamp(vx, 3, 5);
+            velocity = clamp(vx, 5, 8);
         } else if (vx < 0) {
-          velocity = clamp(vx * -1, 3, 5) * -1;
+            velocity = clamp(vx * -1, 5, 8) * -1;
         }
 
-        if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD) {
+        if (Math.abs(this.state.pan.x._value) > HORIZONTAL_TRESHOLD) {
 
           this.state.pan.x._value > 0
             ? this.props.handleRight(this.state.card)
@@ -135,11 +150,10 @@ class SwipeCards extends Component {
             ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
             : null
 
-          Animated.decay(this.state.pan, {
-            velocity: {x: velocity, y: vy},
-            deceleration: 0.98
-          }).start(this._resetState.bind(this))
-        } else if(Math.abs(this.state.pan.y._value) > SWIPE_THRESHOLD) {
+          this._animateExit(velocity, vy);
+
+        } else if(Math.abs(this.state.pan.y._value) > VERTICAL_TRESHOLD) {
+
           this.state.pan.y._value > 0
             ? this.props.handleDown(this.state.card)
             : this.props.handleUp(this.state.card)
@@ -148,23 +162,19 @@ class SwipeCards extends Component {
             ? this.props.cardRemoved(this.props.cards.indexOf(this.state.card))
             : null
 
-          Animated.decay(this.state.pan, {
-            velocity: {x: velocity, y: vy},
-            deceleration: 0.98
-          }).start(this._resetState.bind(this))
+          this._animateExit(velocity, vy);
+
         } else {
-          Animated.spring(this.state.pan, {
-            toValue: {x: 0, y: 0},
-            friction: 4
-          }).start()
+          this._returnToCenter();
         }
       }
     })
   }
 
-  _resetState() {
+  async _resetState() {
+    await this.state.enter.setValue(0);
     this.state.pan.setValue({x: 0, y: 0});
-    this.state.enter.setValue(0);
+    
     this._goToNextCard();
     this._animateEntrance();
   }
