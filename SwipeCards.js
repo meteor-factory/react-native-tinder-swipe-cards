@@ -195,10 +195,10 @@ class SwipeCards extends Component {
 
     let animatedCardstyles = {transform: [{translateY}, {rotate}, {scale}], opacity};
 
-    let yupOpacity = pan.y.interpolate({inputRange: [150, 200], outputRange: [0, 1]});
+    let yupOpacity = pan.y.interpolate({inputRange: [100, 200], outputRange: [0, 1]});
     let animatedYupStyles = {opacity: yupOpacity}
 
-    let nopeOpacity = pan.y.interpolate({inputRange: [-200, 150], outputRange: [1, 0]});
+    let nopeOpacity = pan.y.interpolate({inputRange: [-200, 100], outputRange: [1, 0]});
     let animatedNopeStyles = {opacity: nopeOpacity}
 
         return (
