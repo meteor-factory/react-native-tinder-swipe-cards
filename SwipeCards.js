@@ -9,15 +9,17 @@ import {
     View,
     Animated,
     PanResponder,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 
 import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
-var HORIZONTAL_TRESHOLD = 120;
-var VERTICAL_TRESHOLD = 100;
+var HORIZONTAL_TRESHOLD = 5000;
+var VERTICAL_TRESHOLD = 200;
+let WindowWidth = Dimensions.get('window').width;
 
 // Base Styles. Use props to override these values
 var styles = StyleSheet.create({
@@ -28,30 +30,20 @@ var styles = StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     yup: {
-        borderColor: 'green',
-        borderWidth: 2,
+        width: WindowWidth,
+        backgroundColor: '#ff6363',
+        height: 5,
         position: 'absolute',
-        padding: 20,
-        bottom: 20,
-        borderRadius: 5,
-        right: 20,
-    },
-    yupText: {
-        fontSize: 16,
-        color: 'green',
+        padding: 0,
+        bottom: 0,
     },
     nope: {
-        borderColor: 'red',
-        borderWidth: 2,
+        width: WindowWidth,
+        backgroundColor: 'black',
+        height: 5,
         position: 'absolute',
-        bottom: 20,
-        padding: 20,
-        borderRadius: 5,
-        left: 20,
-    },
-    nopeText: {
-        fontSize: 16,
-        color: 'red',
+        padding: 0,
+        top: 0,
     }
 });
 
@@ -61,7 +53,7 @@ class SwipeCards extends Component {
 
     this.state = {
       pan: new Animated.ValueXY(),
-      enter: new Animated.Value(0),
+      enter: new Animated.Value(1),
       card: this.props.cards ? this.props.cards[0] : null,
     }
   }
@@ -94,8 +86,8 @@ class SwipeCards extends Component {
 
   _animateExit(velocity, vy) {
     Animated.decay(this.state.pan, {
-      velocity: {x: velocity, y: vy},
-      deceleration: 0.98
+      velocity: {x:velocity, y: vy},
+      deceleration: 0.6
     }).start(this._resetState.bind(this))
   }
 
@@ -172,7 +164,7 @@ class SwipeCards extends Component {
   }
 
   async _resetState() {
-    await this.state.enter.setValue(0);
+    await this.state.enter.setValue(0.7);
     this.state.pan.setValue({x: 0, y: 0});
     
     this._goToNextCard();
@@ -198,18 +190,16 @@ class SwipeCards extends Component {
     let [translateX, translateY] = [pan.x, pan.y];
 
     let rotate = this.props.rotation ? pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]}) : '0deg';
-    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+    let opacity = pan.y.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
     let scale = enter;
 
-    let animatedCardstyles = {transform: [{translateX}, {translateY}, {rotate}, {scale}], opacity};
+    let animatedCardstyles = {transform: [{translateY}, {rotate}, {scale}], opacity};
 
-    let yupOpacity = pan.x.interpolate({inputRange: [0, 150], outputRange: [0, 1]});
-    let yupScale = pan.x.interpolate({inputRange: [0, 150], outputRange: [0.5, 1], extrapolate: 'clamp'});
-    let animatedYupStyles = {transform: [{scale: yupScale}], opacity: yupOpacity}
+    let yupOpacity = pan.y.interpolate({inputRange: [150, 200], outputRange: [0, 1]});
+    let animatedYupStyles = {opacity: yupOpacity}
 
-    let nopeOpacity = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0]});
-    let nopeScale = pan.x.interpolate({inputRange: [-150, 0], outputRange: [1, 0.5], extrapolate: 'clamp'});
-    let animatedNopeStyles = {transform: [{scale: nopeScale}], opacity: nopeOpacity}
+    let nopeOpacity = pan.y.interpolate({inputRange: [-200, 150], outputRange: [1, 0]});
+    let animatedNopeStyles = {opacity: nopeOpacity}
 
         return (
             <View style={this.props.containerStyle}>
@@ -228,10 +218,7 @@ class SwipeCards extends Component {
                       this.props.showNope
                       ? (
                         <Animated.View style={[this.props.nopeStyle, animatedNopeStyles]}>
-                            {this.props.noView
-                                ? this.props.noView
-                                : <Text style={this.props.nopeTextStyle}>{this.props.noText ? this.props.noText : "Nope!"}</Text>
-                            }
+                            {this.props.noView}
                         </Animated.View>
                         )
                       : null
@@ -244,10 +231,7 @@ class SwipeCards extends Component {
                       this.props.showYup
                       ? (
                         <Animated.View style={[this.props.yupStyle, animatedYupStyles]}>
-                            {this.props.yupView
-                                ? this.props.yupView
-                                : <Text style={this.props.yupTextStyle}>{this.props.yupText? this.props.yupText : "Yup!"}</Text>
-                            }
+                            {this.props.yupView}
                         </Animated.View>
                       )
                       : null
