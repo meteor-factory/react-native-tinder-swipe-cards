@@ -75,6 +75,7 @@ export default class SwipeCards extends Component {
     handleYup: React.PropTypes.func,
     handleNope: React.PropTypes.func,
     yupText: React.PropTypes.string,
+    noText: React.PropTypes.string,
     onClickHandler:  React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
@@ -94,7 +95,8 @@ export default class SwipeCards extends Component {
     showNope: true,
     handleYup: (card) => null,
     handleNope: (card) => null,
-    yupText: 'Yup',
+    nopeText: "Nope!",
+    yupText: "Yup!",
     onClickHandler: () => {alert('tap')},
     cardRemoved: (ix) => null,
     renderCard: (card) => null,
@@ -225,6 +227,22 @@ export default class SwipeCards extends Component {
     // Checks to see if last card.
     // If props.loop=true, will start again from the first card.
     if (currentIndex[this.guid] > this.state.cards.length - 1 && this.props.loop) {
+      currentIndex[this.guid] = 0;
+    }
+
+    this.setState({
+      card: this.state.cards[currentIndex[this.guid]]
+    });
+  }
+
+  _goToPrevCard() {
+    this.state.pan.setValue({x: 0, y: 0});
+    this.state.enter.setValue(0);
+    this._animateEntrance();
+    
+    currentIndex[this.guid]--;
+
+    if (currentIndex[this.guid] < 0) {
       currentIndex[this.guid] = 0;
     }
 
