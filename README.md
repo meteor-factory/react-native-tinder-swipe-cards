@@ -86,7 +86,9 @@ const styles = StyleSheet.create({
 ```javascript
 'use strict';
 
-import React, {StyleSheet, Text, View, Image} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
+
 
 import SwipeCards from 'react-native-swipe-cards';
 
