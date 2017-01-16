@@ -297,6 +297,13 @@ export default class SwipeCards extends Component {
     this._goToNextCard();
   }
 
+  /**
+   * Returns current card object
+   */
+  getCurrentCard() {
+      return this.state.cards[currentIndex[this.guid]];
+  }
+
   renderNoMoreCards() {
     if (this.props.renderNoMoreCards) {
       return this.props.renderNoMoreCards();
