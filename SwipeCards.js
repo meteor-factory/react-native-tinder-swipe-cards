@@ -17,9 +17,9 @@ import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
-var HORIZONTAL_TRESHOLD = 5000;
-var VERTICAL_TRESHOLD = 200;
-let WindowWidth = Dimensions.get('window').width;
+var HORIZONTAL_TRESHOLD = 100;
+var VERTICAL_TRESHOLD = 5000;
+const WindowHeight  = Dimensions.get('window').height;
 
 // Base Styles. Use props to override these values
 var styles = StyleSheet.create({
@@ -30,20 +30,23 @@ var styles = StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     yup: {
-        width: WindowWidth,
+        height: Dimensions.get('window').height,
         backgroundColor: '#ff6363',
-        height: 5,
+        width: 5,
         position: 'absolute',
         padding: 0,
         bottom: 0,
+        right: 0
     },
     nope: {
-        width: WindowWidth,
+        height: Dimensions.get('window').height,
+        alignSelf: "flex-end",
         backgroundColor: 'black',
-        height: 5,
+        width: 5,
         position: 'absolute',
         padding: 0,
-        top: 0,
+        bottom: 0,
+        left: 0
     }
 });
 
@@ -119,7 +122,7 @@ class SwipeCards extends Component {
       },
 
       onPanResponderMove: Animated.event([
-        null, {dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0},
+        null, {dx: this.state.pan.x, dy: this.state.pan.y},
       ]),
 
       onPanResponderRelease: (e, {vx, vy}) => {
@@ -190,15 +193,15 @@ class SwipeCards extends Component {
     let [translateX, translateY] = [pan.x, pan.y];
 
     let rotate = this.props.rotation ? pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]}) : '0deg';
-    let opacity = pan.y.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
+    let opacity = pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5]});
     let scale = enter;
 
-    let animatedCardstyles = {transform: [{translateY}, {rotate}, {scale}], opacity};
+    let animatedCardstyles = {transform: [{translateX}, {rotate}, {scale}], opacity};
 
-    let yupOpacity = pan.y.interpolate({inputRange: [100, 200], outputRange: [0, 1]});
+    let yupOpacity = pan.x.interpolate({inputRange: [0, 100], outputRange: [0, 1]});
     let animatedYupStyles = {opacity: yupOpacity}
 
-    let nopeOpacity = pan.y.interpolate({inputRange: [-200, 100], outputRange: [1, 0]});
+    let nopeOpacity = pan.x.interpolate({inputRange: [-100, 0], outputRange: [1, 0]});
     let animatedNopeStyles = {opacity: nopeOpacity}
 
         return (
