@@ -127,7 +127,7 @@ export default class SwipeCards extends Component {
       onStartShouldSetPanResponderCapture: (e, gestureState) => {
         this.lastX = gestureState.moveX;
         this.lastY = gestureState.moveY;
-        return false;
+        return true;
       },
       onMoveShouldSetPanResponderCapture: (e, gestureState) => {
         return (Math.abs(this.lastX - gestureState.moveX) > 5 || Math.abs(this.lastY - gestureState.moveY) > 5);
@@ -147,7 +147,7 @@ export default class SwipeCards extends Component {
       onPanResponderRelease: (e, {vx, vy, dx, dy}) => {
         this.state.pan.flattenOffset();
         let velocity;
-        if ((dx === 0) && (dy === 0))   //meaning the gesture did not cover any distance
+        if (Math.abs(dx) <= 5 && Math.abs(dy) <= 5)   //meaning the gesture did not cover any distance
         {
           this.props.onClickHandler(this.state.card)
         }
