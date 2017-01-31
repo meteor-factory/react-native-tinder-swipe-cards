@@ -232,6 +232,15 @@ const styles = StyleSheet.create({
 | yupText           | string  | Text to render on Yes vote                                  |         |
 | noView           | element | React component to render on a No vote                                 |         |
 | noText           | string  | Text to render on No vote                                  |         |
+| smoothTransition | Boolean | Disables a slow transition fading the current card out | `false`  |
+| cardKey          | String  | React key to be used to for each card | |
+| dragY            | Boolean | Allows dragging cards vertically | `true` |
+| stackOffsetX     | Number  | Horizontal offset between cards in stack | 25 |
+| stackOffsetY     | Number  | Vertical offset between cards in stack | 0 |
+| cardRemoved      | Function | A callback passing the card reference that just got removed | |
+
+
+
 
 *required
 
