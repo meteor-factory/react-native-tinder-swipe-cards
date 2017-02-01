@@ -79,7 +79,8 @@ export default class SwipeCards extends Component {
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
-    dragY: React.PropTypes.bool
+    dragY: React.PropTypes.bool,
+    smoothTransition: React.PropTypes.bool
   };
 
   static defaultProps = {
@@ -101,7 +102,8 @@ export default class SwipeCards extends Component {
     cardRemoved: (ix) => null,
     renderCard: (card) => null,
     style: styles.container,
-    dragY: true
+    dragY: true,
+    smoothTransition: false
   };
 
   constructor(props) {
@@ -176,17 +178,21 @@ export default class SwipeCards extends Component {
 
           this.props.cardRemoved(currentIndex[this.guid]);
 
-          this.cardAnimation = Animated.decay(this.state.pan, {
-            velocity: { x: velocity, y: vy },
-            deceleration: 0.98
-          });
-          this.cardAnimation.start(status => {
-            if (status.finished) this._advanceState();
-            else this._resetState();
+          if (this.props.smoothTransition) {
+            this._advanceState();
+          } else {
+            this.cardAnimation = Animated.decay(this.state.pan, {
+              velocity: { x: velocity, y: vy },
+              deceleration: 0.98
+            });
+            this.cardAnimation.start(status => {
+              if (status.finished) this._advanceState();
+              else this._resetState();
 
-            this.cardAnimation = null;
+              this.cardAnimation = null;
+            }
+            );
           }
-          );
 
         } else {
           this._resetPan();
@@ -342,7 +348,7 @@ export default class SwipeCards extends Component {
         position: 'absolute',
         top: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetY, offsetY] }),
         left: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetX, offsetX] }),
-        opacity: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
+        opacity: this.props.smoothTransition ? 1 : this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
         transform: [{ scale: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastScale, scale] }) }],
         elevation: i * 10
       };
@@ -353,7 +359,7 @@ export default class SwipeCards extends Component {
         let [translateX, translateY] = [pan.x, pan.y];
 
         let rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"] });
-        let opacity = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] });
+        let opacity = this.props.smoothTransition ? 1 : pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] });
 
         let animatedCardStyles = {
           ...style,
