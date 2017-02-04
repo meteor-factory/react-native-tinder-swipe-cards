@@ -112,7 +112,7 @@ export default class SwipeCards extends Component {
     if (!currentIndex[this.guid]) currentIndex[this.guid] = 0;
 
     this.state = {
-      pan: new Animated.ValueXY(),
+      pan: new Animated.ValueXY(0),
       enter: new Animated.Value(0.5),
       cards: [].concat(this.props.cards),
       card: this.props.cards[currentIndex[this.guid]],
@@ -130,6 +130,8 @@ export default class SwipeCards extends Component {
         return false;
       },
       onMoveShouldSetPanResponderCapture: (e, gestureState) => {
+        if (Math.abs(gestureState.dx) < Math.abs(gestureState.dy)) return false;
+        if ((gestureState.dx === 0) && (gestureState.dy === 0))   return false;
         return (Math.abs(this.lastX - gestureState.moveX) > 5 || Math.abs(this.lastY - gestureState.moveY) > 5);
       },
 
