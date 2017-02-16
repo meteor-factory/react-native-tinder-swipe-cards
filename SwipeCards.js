@@ -162,7 +162,7 @@ export default class SwipeCards extends Component {
           velocity = clamp(vx * -1, 3, 5) * -1;
         }
 
-        if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD) {
+        if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD && vx !== 0) {
 
           let cancelled = false;
 
