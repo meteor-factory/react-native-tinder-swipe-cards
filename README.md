@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
 | cards*            | Array    | Data that will be provided as props for the cards    |         |
 | renderCard*       | Function | Renders the card with the current data               |          |
 | loop              | Boolean  | If true, start again when run out of cards           | `false` |
+| onLoop            | Function | Called when card list returns to the beginning       |         |
 | renderNoMoreCards | Function | Renders what is shown after swiped last card         |         |
 | showYup           | Boolean  | Shows the 'Yup' component                            | `true`  |
 | showNope          | Boolean  | Shows the 'Nope'                                     | `true`  |

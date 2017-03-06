@@ -63,6 +63,7 @@ export default class SwipeCards extends Component {
     cards: React.PropTypes.array,
     cardKey: React.PropTypes.string,
     loop: React.PropTypes.bool,
+    onLoop: React.PropTypes.func,
     allowGestureTermination: React.PropTypes.bool,
     stack: React.PropTypes.bool,
     stackGuid: React.PropTypes.string,
@@ -87,6 +88,7 @@ export default class SwipeCards extends Component {
     cards: [],
     cardKey: 'key',
     loop: false,
+    onLoop: () => null,
     allowGestureTermination: true,
     stack: false,
     stackDepth: 5,
@@ -237,6 +239,7 @@ export default class SwipeCards extends Component {
     // Checks to see if last card.
     // If props.loop=true, will start again from the first card.
     if (currentIndex[this.guid] > this.state.cards.length - 1 && this.props.loop) {
+      this.props.onLoop();
       currentIndex[this.guid] = 0;
     }
 
