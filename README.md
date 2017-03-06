@@ -56,6 +56,8 @@ export default React.createClass({
     console.log(`Nope for ${card.text}`)
   },
   render() {
+    // If you want a stack of cards instead of one-per-one view, activate stack mode
+    // stack={true}
     return (
       <SwipeCards
         cards={this.state.cards}
@@ -238,6 +240,7 @@ const styles = StyleSheet.create({
 | smoothTransition | Boolean | Disables a slow transition fading the current card out | `false`  |
 | cardKey          | String  | React key to be used to for each card | |
 | dragY            | Boolean | Allows dragging cards vertically | `true` |
+| stack            | Boolean | Enables the stack mode | `false` |
 | stackOffsetX     | Number  | Horizontal offset between cards in stack | 25 |
 | stackOffsetY     | Number  | Vertical offset between cards in stack | 0 |
 | cardRemoved      | Function | A callback passing the card reference that just got removed | |
