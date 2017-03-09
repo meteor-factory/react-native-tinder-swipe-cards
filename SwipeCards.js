@@ -101,6 +101,8 @@ export default class SwipeCards extends Component {
     nopeText: "Nope!",
     yupText: "Yup!",
     onClickHandler: () => { alert('tap') },
+    onDragStart: () => {},
+    onDragRelease: () => {},
     cardRemoved: (ix) => null,
     renderCard: (card) => null,
     style: styles.container,
@@ -129,6 +131,7 @@ export default class SwipeCards extends Component {
 
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (e, gestureState) => {
+        this.props.onDragStart()
         this.lastX = gestureState.moveX;
         this.lastY = gestureState.moveY;
         return true;
@@ -151,6 +154,7 @@ export default class SwipeCards extends Component {
       ]),
 
       onPanResponderRelease: (e, {vx, vy, dx, dy}) => {
+        this.props.onDragRelease()
         this.state.pan.flattenOffset();
         let velocity;
         if (Math.abs(dx) <= 5 && Math.abs(dy) <= 5)   //meaning the gesture did not cover any distance
