@@ -96,6 +96,7 @@ export default class SwipeCards extends Component {
     yupText: React.PropTypes.string,
     maybeText: React.PropTypes.string,
     noText: React.PropTypes.string,
+    getActions: React.PropTypes.func,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
@@ -120,10 +121,11 @@ export default class SwipeCards extends Component {
     handleYup: (card) => null,
     handleMaybe: (card) => null,
     handleNope: (card) => null,
+    getActions: () => null,
     nopeText: "Nope!",
     maybeText: "Maybe!",
     yupText: "Yup!",
-    onClickHandler: () => { alert('tap') },
+    onClickHandler: () => null,
     cardRemoved: (ix) => null,
     renderCard: (card) => null,
     style: styles.container,
@@ -132,7 +134,7 @@ export default class SwipeCards extends Component {
   };
 
   componentWillMount () {
-    this.props.forceActions({
+    this.props.getActions({
       yup: this._forceRightSwipe.bind(this),
       nope: this._forceLeftSwipe.bind(this),
       maybe: this._forceUpSwipe.bind(this),
