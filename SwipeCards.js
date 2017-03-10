@@ -475,7 +475,7 @@ export default class SwipeCards extends Component {
 
   renderMaybe() {
     if (!this.props.hasMaybeAction) return null;
-
+    
     let {pan} = this.state;
 
     let maybeOpacity = pan.y.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
