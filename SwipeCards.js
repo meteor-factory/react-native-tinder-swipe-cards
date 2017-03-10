@@ -9,6 +9,7 @@ import {
   View,
   Animated,
   PanResponder,
+  Dimensions,
   Image
 } from 'react-native';
 
@@ -76,6 +77,7 @@ export default class SwipeCards extends Component {
   static propTypes = {
     cards: React.PropTypes.array,
     cardKey: React.PropTypes.string,
+    hasMaybeAction: React.PropTypes.bool,
     loop: React.PropTypes.bool,
     onLoop: React.PropTypes.func,
     allowGestureTermination: React.PropTypes.bool,
@@ -104,6 +106,7 @@ export default class SwipeCards extends Component {
   static defaultProps = {
     cards: [],
     cardKey: 'key',
+    hasMaybeAction: false,
     loop: false,
     onLoop: () => null,
     allowGestureTermination: true,
@@ -188,7 +191,7 @@ export default class SwipeCards extends Component {
 
         const hasSwipedHorizontally = Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD
         const hasSwipedVertically = Math.abs(this.state.pan.y._value) > SWIPE_THRESHOLD
-        if (hasSwipedHorizontally || hasSwipedVertically) {
+        if (hasSwipedHorizontally || (hasSwipedVertically && this.props.hasMaybeAction)) {
 
           let cancelled = false;
 
@@ -200,7 +203,7 @@ export default class SwipeCards extends Component {
             cancelled = this.props.handleYup(this.state.card);
           } else if (hasMovedLeft) {
             cancelled = this.props.handleNope(this.state.card);
-          } else if (hasMovedUp) {
+          } else if (hasMovedUp && this.props.hasMaybeAction) {
             cancelled = this.props.handleMaybe(this.state.card);
           } else {
             cancelled = true
@@ -471,6 +474,8 @@ export default class SwipeCards extends Component {
   }
 
   renderMaybe() {
+    if (!this.props.hasMaybeAction) return null;
+
     let {pan} = this.state;
 
     let maybeOpacity = pan.y.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
