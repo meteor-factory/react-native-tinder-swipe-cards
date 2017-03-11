@@ -96,6 +96,7 @@ export default class SwipeCards extends Component {
     yupText: React.PropTypes.string,
     maybeText: React.PropTypes.string,
     noText: React.PropTypes.string,
+    getActions: React.PropTypes.func,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
@@ -120,16 +121,25 @@ export default class SwipeCards extends Component {
     handleYup: (card) => null,
     handleMaybe: (card) => null,
     handleNope: (card) => null,
+    getActions: () => null,
     nopeText: "Nope!",
     maybeText: "Maybe!",
     yupText: "Yup!",
-    onClickHandler: () => { alert('tap') },
+    onClickHandler: () => null,
     cardRemoved: (ix) => null,
     renderCard: (card) => null,
     style: styles.container,
     dragY: true,
     smoothTransition: false
   };
+
+  componentWillMount () {
+    this.props.getActions({
+      yup: this._forceRightSwipe.bind(this),
+      nope: this._forceLeftSwipe.bind(this),
+      maybe: this._forceUpSwipe.bind(this),
+    })
+  }
 
   constructor(props) {
     super(props);
@@ -244,13 +254,26 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
-      else this._resetState();
+      const cancelled = this.props.handleNope(currentIndex[this.guid])
+      if (status.finished && !cancelled) this._advanceState();
+      else return this._resetState();
 
       this.cardAnimation = null;
-    }
-      );
-    this.props.cardRemoved(currentIndex[this.guid]);
+      this.props.cardRemoved(currentIndex[this.guid]);
+    });
+  }
+
+  _forceUpSwipe() {
+    this.cardAnimation = Animated.timing(this.state.pan, {
+      toValue: { x: 0, y: -500 },
+    }).start(status => {
+      const cancelled = this.props.handleMaybe(currentIndex[this.guid])
+      if (status.finished && !cancelled) this._advanceState();
+      else return this._resetState();
+
+      this.cardAnimation = null;
+      this.props.cardRemoved(currentIndex[this.guid]);
+    });
   }
 
   _forceUpSwipe() {
@@ -270,13 +293,13 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
-      else this._resetState();
+      const cancelled = this.props.handleYup(currentIndex[this.guid])
+      if (status.finished && !cancelled) this._advanceState();
+      else return this._resetState();
 
       this.cardAnimation = null;
-    }
-      );
-    this.props.cardRemoved(currentIndex[this.guid]);
+      this.props.cardRemoved(currentIndex[this.guid]);
+    });
   }
 
   _goToNextCard() {
