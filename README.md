@@ -5,7 +5,9 @@ LOOKING FOR CONTRIBUTORS. I'm not currently using this in any active projects. I
 A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
 
 
-![react native tinder cards](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards.gif)
+![swiper-cards](https://github.com/esganzerla/react-native-tinder-swipe-cards/blob/handle-maybe/screenshots/swiper-cards.gif)
+
+Note: Maybe action is optional
 
 ![react native tinder cards pugs](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards-pugs.gif)
 
@@ -55,6 +57,9 @@ export default React.createClass({
   handleNope (card) {
     console.log(`Nope for ${card.text}`)
   },
+  handleMaybe (card) {
+    console.log(`Maybe for ${card.text}`)
+  },
   render() {
     // If you want a stack of cards instead of one-per-one view, activate stack mode
     // stack={true}
@@ -67,6 +72,8 @@ export default React.createClass({
 
         handleYup={this.handleYup}
         handleNope={this.handleNope}
+        handleMaybe={this.handleMaybe}
+        hasMaybeAction
       />
     )
   }
