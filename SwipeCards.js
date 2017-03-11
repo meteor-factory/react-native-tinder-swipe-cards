@@ -9,6 +9,7 @@ import {
   View,
   Animated,
   PanResponder,
+  Dimensions,
   Image
 } from 'react-native';
 
@@ -16,6 +17,7 @@ import clamp from 'clamp';
 
 import Defaults from './Defaults.js';
 
+const viewport = Dimensions.get('window')
 const SWIPE_THRESHOLD = 120;
 
 const styles = StyleSheet.create({
@@ -32,11 +34,24 @@ const styles = StyleSheet.create({
     padding: 20,
     bottom: 20,
     borderRadius: 5,
-    right: 20,
+    right: 0,
   },
   yupText: {
     fontSize: 16,
     color: 'green',
+  },
+  maybe: {
+    borderColor: 'blue',
+    borderWidth: 2,
+    position: 'absolute',
+    padding: 20,
+    bottom: 20,
+    borderRadius: 5,
+    right: 20,
+  },
+  maybeText: {
+    fontSize: 16,
+    color: 'blue',
   },
   nope: {
     borderColor: 'red',
@@ -45,7 +60,7 @@ const styles = StyleSheet.create({
     bottom: 20,
     padding: 20,
     borderRadius: 5,
-    left: 20,
+    left: 0,
   },
   nopeText: {
     fontSize: 16,
@@ -62,6 +77,7 @@ export default class SwipeCards extends Component {
   static propTypes = {
     cards: React.PropTypes.array,
     cardKey: React.PropTypes.string,
+    hasMaybeAction: React.PropTypes.bool,
     loop: React.PropTypes.bool,
     onLoop: React.PropTypes.func,
     allowGestureTermination: React.PropTypes.bool,
@@ -72,10 +88,13 @@ export default class SwipeCards extends Component {
     stackOffsetY: React.PropTypes.number,
     renderNoMoreCards: React.PropTypes.func,
     showYup: React.PropTypes.bool,
+    showMaybe: React.PropTypes.bool,
     showNope: React.PropTypes.bool,
     handleYup: React.PropTypes.func,
+    handleMaybe: React.PropTypes.func,
     handleNope: React.PropTypes.func,
     yupText: React.PropTypes.string,
+    maybeText: React.PropTypes.string,
     noText: React.PropTypes.string,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
@@ -87,6 +106,7 @@ export default class SwipeCards extends Component {
   static defaultProps = {
     cards: [],
     cardKey: 'key',
+    hasMaybeAction: false,
     loop: false,
     onLoop: () => null,
     allowGestureTermination: true,
@@ -95,10 +115,13 @@ export default class SwipeCards extends Component {
     stackOffsetX: 25,
     stackOffsetY: 0,
     showYup: true,
+    showMaybe: true,
     showNope: true,
     handleYup: (card) => null,
+    handleMaybe: (card) => null,
     handleNope: (card) => null,
     nopeText: "Nope!",
+    maybeText: "Maybe!",
     yupText: "Yup!",
     onClickHandler: () => { alert('tap') },
     cardRemoved: (ix) => null,
@@ -166,14 +189,24 @@ export default class SwipeCards extends Component {
           velocity = dx < 0 ? -3 : 3;
         }
 
-        if (Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD && vx !== 0) {
+        const hasSwipedHorizontally = Math.abs(this.state.pan.x._value) > SWIPE_THRESHOLD
+        const hasSwipedVertically = Math.abs(this.state.pan.y._value) > SWIPE_THRESHOLD
+        if (hasSwipedHorizontally || (hasSwipedVertically && this.props.hasMaybeAction)) {
 
           let cancelled = false;
 
-          if (this.state.pan.x._value > 0) {
+          const hasMovedRight = hasSwipedHorizontally && this.state.pan.x._value > 0
+          const hasMovedLeft = hasSwipedHorizontally && this.state.pan.x._value < 0
+          const hasMovedUp = hasSwipedVertically && this.state.pan.y._value < 0
+
+          if (hasMovedRight) {
             cancelled = this.props.handleYup(this.state.card);
-          } else {
+          } else if (hasMovedLeft) {
             cancelled = this.props.handleNope(this.state.card);
+          } else if (hasMovedUp && this.props.hasMaybeAction) {
+            cancelled = this.props.handleMaybe(this.state.card);
+          } else {
+            cancelled = true
           }
 
           //Yup or nope was cancelled, return the card to normal.
@@ -210,6 +243,19 @@ export default class SwipeCards extends Component {
   _forceLeftSwipe() {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 },
+    }).start(status => {
+      if (status.finished) this._advanceState();
+      else this._resetState();
+
+      this.cardAnimation = null;
+    }
+      );
+    this.props.cardRemoved(currentIndex[this.guid]);
+  }
+
+  _forceUpSwipe() {
+    this.cardAnimation = Animated.timing(this.state.pan, {
+      toValue: { x: 0, y: 500 },
     }).start(status => {
       if (status.finished) this._advanceState();
       else this._resetState();
@@ -410,8 +456,8 @@ export default class SwipeCards extends Component {
   renderNope() {
     let {pan} = this.state;
 
-    let nopeOpacity = pan.x.interpolate({ inputRange: [-150, 0], outputRange: [1, 0] });
-    let nopeScale = pan.x.interpolate({ inputRange: [-150, 0], outputRange: [1, 0.5], extrapolate: 'clamp' });
+    let nopeOpacity = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
+    let nopeScale = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, 0], outputRange: [1, 0], extrapolate: 'clamp' });
     let animatedNopeStyles = { transform: [{ scale: nopeScale }], opacity: nopeOpacity };
 
     if (this.props.renderNope) {
@@ -427,11 +473,33 @@ export default class SwipeCards extends Component {
     return null;
   }
 
+  renderMaybe() {
+    if (!this.props.hasMaybeAction) return null;
+    
+    let {pan} = this.state;
+
+    let maybeOpacity = pan.y.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
+    let maybeScale = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, 0, SWIPE_THRESHOLD], outputRange: [0, 1, 0], extrapolate: 'clamp' });
+    let animatedMaybeStyles = { transform: [{ scale: maybeScale }], opacity: maybeOpacity };
+
+    if (this.props.renderMaybe) {
+      return this.props.renderMaybe(pan);
+    }
+
+    if (this.props.showMaybe) {
+      return <Animated.View style={[styles.maybe, animatedMaybeStyles]}>
+        <Text style={styles.maybeText}>{this.props.maybeText}</Text>
+      </Animated.View>;
+    }
+
+    return null;
+  }
+
   renderYup() {
     let {pan} = this.state;
 
-    let yupOpacity = pan.x.interpolate({ inputRange: [0, 150], outputRange: [0, 1] });
-    let yupScale = pan.x.interpolate({ inputRange: [0, 150], outputRange: [0.5, 1], extrapolate: 'clamp' });
+    let yupOpacity = pan.x.interpolate({ inputRange: [(SWIPE_THRESHOLD/2), SWIPE_THRESHOLD], outputRange: [0, 1], extrapolate: 'clamp' });
+    let yupScale = pan.x.interpolate({ inputRange: [0, SWIPE_THRESHOLD], outputRange: [0.5, 1], extrapolate: 'clamp' });
     let animatedYupStyles = { transform: [{ scale: yupScale }], opacity: yupOpacity };
 
     if (this.props.renderYup) {
@@ -452,6 +520,7 @@ export default class SwipeCards extends Component {
       <View style={styles.container}>
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderNope()}
+        {this.renderMaybe()}
         {this.renderYup()}
       </View>
     );
