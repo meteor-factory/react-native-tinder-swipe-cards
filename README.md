@@ -21,7 +21,7 @@ Note: Maybe action is optional
 // Tinder.js
 'use strict';
 
-import React from 'react';
+import React, { Component } from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
@@ -35,6 +35,20 @@ let Card = React.createClass({
     )
   }
 })
+
+class NoMoreCards extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <View>
+        <Text style={styles.noMoreCardsText}>No more cards</Text>
+      </View>
+    )
+  }
+}
 
 const Cards = [
   {text: 'Tomato', backgroundColor: 'red'},
@@ -86,6 +100,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 300,
     height: 300,
+  },
+  noMoreCardsText: {
+    fontSize: 22,
   }
 })
 
