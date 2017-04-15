@@ -98,6 +98,8 @@ export default class SwipeCards extends Component {
     noText: React.PropTypes.string,
     nopeStyle: React.PropTypes.object,
     yupStyle: React.PropTypes.object,
+    nopeTextStyle: React.PropTypes.object,
+    yupTextStyle: React.PropTypes.object,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
@@ -472,7 +474,7 @@ export default class SwipeCards extends Component {
 
     if (this.props.showNope) {
       return <Animated.View style={[styles.nope, this.props.nopeStyle, animatedNopeStyles]}>
-        <Text style={styles.nopeText}>{this.props.nopeText}</Text>
+        <Text style={[styles.nopeText, this.props.nopeTextStyle]}>{this.props.nopeText}</Text>
       </Animated.View>;
     }
 
@@ -514,7 +516,7 @@ export default class SwipeCards extends Component {
 
     if (this.props.showYup) {
       return <Animated.View style={[styles.yup, this.props.nopeStyle, animatedYupStyles]}>
-        <Text style={styles.yupText}>{this.props.yupText}</Text>
+        <Text style={[styles.yupText, this.props.yupText]}>{this.props.yupText}</Text>
       </Animated.View>;
     }
 
