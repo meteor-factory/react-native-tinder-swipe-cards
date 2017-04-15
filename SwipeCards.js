@@ -517,7 +517,7 @@ export default class SwipeCards extends Component {
     }
 
     if (this.props.showYup) {
-      return <Animated.View style={[styles.yup, this.props.nopeStyle, animatedYupStyles]}>
+      return <Animated.View style={[styles.yup, this.props.yupStyle, animatedYupStyles]}>
         <Text style={[styles.yupText, this.props.yupTextStyle]}>{this.props.yupText}</Text>
       </Animated.View>;
     }
