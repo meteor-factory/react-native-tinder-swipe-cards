@@ -255,7 +255,6 @@ const styles = StyleSheet.create({
 | renderMaybe       | Function | Renders Maybe                                               |         |
 | handleYup         | Function | Called when card is 'passed' with that card's data          |         |
 | handleNope        | Function | Called when card is 'rejected' with that card's data        |         |
-| handleNope        | Function | Called when card is 'rejected' with that card's data        |         |
 | containerStyle    | style    | Override default style                                      |         |
 | yupStyle          | style    | Override default style                                      |         |
 | yupTextStyle      | style    | Override default style                                      |         |

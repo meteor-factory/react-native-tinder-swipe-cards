@@ -94,8 +94,11 @@ export default class SwipeCards extends Component {
     handleMaybe: React.PropTypes.func,
     handleNope: React.PropTypes.func,
     yupText: React.PropTypes.string,
+    yupView: React.PropTypes.element,
     maybeText: React.PropTypes.string,
+    maybeView: React.PropTypes.element,
     nopeText: React.PropTypes.string,
+    noView: React.PropTypes.element,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
     cardRemoved: React.PropTypes.func,
@@ -469,9 +472,14 @@ export default class SwipeCards extends Component {
     }
 
     if (this.props.showNope) {
+
+      const inner = this.props.noView
+        ? this.props.noView
+        : <Text style={styles.nopeText}>{this.props.nopeText}</Text>
+
       return <Animated.View style={[styles.nope, animatedNopeStyles]}>
-        <Text style={styles.nopeText}>{this.props.nopeText}</Text>
-      </Animated.View>;
+                {inner}
+              </Animated.View>;
     }
 
     return null;
@@ -479,7 +487,7 @@ export default class SwipeCards extends Component {
 
   renderMaybe() {
     if (!this.props.hasMaybeAction) return null;
-    
+
     let {pan} = this.state;
 
     let maybeOpacity = pan.y.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
@@ -490,10 +498,16 @@ export default class SwipeCards extends Component {
       return this.props.renderMaybe(pan);
     }
 
+
     if (this.props.showMaybe) {
+
+      const inner = this.props.maybeView
+        ? this.props.maybeView
+        : <Text style={styles.maybeText}>{this.props.maybeText}</Text>
+
       return <Animated.View style={[styles.maybe, animatedMaybeStyles]}>
-        <Text style={styles.maybeText}>{this.props.maybeText}</Text>
-      </Animated.View>;
+                {inner}
+              </Animated.View>;
     }
 
     return null;
@@ -511,9 +525,14 @@ export default class SwipeCards extends Component {
     }
 
     if (this.props.showYup) {
-      return <Animated.View style={[styles.yup, animatedYupStyles]}>
-        <Text style={styles.yupText}>{this.props.yupText}</Text>
-      </Animated.View>;
+
+      const inner = this.props.yupView
+        ? this.props.yupView
+        : <Text style={styles.yupText}>{this.props.yupText}</Text>;
+
+        return <Animated.View style={[styles.yup, animatedYupStyles]}>
+                {inner}
+              </Animated.View>;
     }
 
     return null;
