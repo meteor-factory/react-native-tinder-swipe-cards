@@ -1,3 +1,6 @@
+forked for adding swipe to previous feature
+<hr/>
+
 # Tinder Cards for React Native
 
 LOOKING FOR CONTRIBUTORS. I'm not currently using this in any active projects. If anyone wants to be added, please write me.
