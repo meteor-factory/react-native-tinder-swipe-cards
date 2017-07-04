@@ -73,6 +73,7 @@ export default class SwipeCards extends Component {
 
   static propTypes = {
     cards: React.PropTypes.array,
+    initial_index: React.PropTypes.number,
     cardKey: React.PropTypes.string,
     hasMaybeAction: React.PropTypes.bool,
     loop: React.PropTypes.bool,
@@ -104,6 +105,7 @@ export default class SwipeCards extends Component {
 
   static defaultProps = {
     cards: [],
+    initial_index: 0,
     cardKey: "key",
     hasMaybeAction: false,
     loop: false,
@@ -137,7 +139,7 @@ export default class SwipeCards extends Component {
 
     // Use a persistent variable to track currentIndex instead of a local one.
     this.guid = this.props.guid || guid++;
-    if (!currentIndex[this.guid]) currentIndex[this.guid] = 0;
+    if (!currentIndex[this.guid]) currentIndex[this.guid] = this.props.initial_index || 0;
 
     this.state = {
       pan: new Animated.ValueXY(0),
