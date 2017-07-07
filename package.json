@@ -1,7 +1,7 @@
 {
   "name": "react-native-swipe-cards",
   "version": "0.1.0",
-  "description": "Tinder style swipe cards for stylishly passing, failing a card",
+  "description": "Swipe cards for stylishly passing & failing a card",
   "main": "SwipeCards.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,12 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/meteor-factory/react-native-tinder-swipe-cards.git"
   },
-  "keywords": [
-    "react-native",
-    "tinder",
-    "cards",
-    "swipe"
-  ],
+  "keywords": ["react-native", "tinder", "cards", "swipe"],
   "author": "meteor-factory",
   "license": "MIT",
   "bugs": {

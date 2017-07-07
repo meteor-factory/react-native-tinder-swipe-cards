@@ -1,24 +1,22 @@
-# Tinder Cards for React Native
+# Swipe Cards for React Native
 
-LOOKING FOR CONTRIBUTORS. I'm not currently using this in any active projects. If anyone wants to be added, please write me.
-
-A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder), based in turn on the Tinder swipe interface.
+A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder).
 
 
-![swiper-cards](https://github.com/esganzerla/react-native-tinder-swipe-cards/blob/handle-maybe/screenshots/swiper-cards.gif)
+!![React Native Swipe Cards](https://github.com/esganzerla/react-native-tinder-swipe-cards/blob/handle-maybe/screenshots/swiper-cards.gif)
 
 Note: Maybe action is optional
 
-![react native tinder cards pugs](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards-pugs.gif)
+![React Native Swipe Cards Pugs](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards-pugs.gif)
 
 ## Quick Start
 1. `npm install --save react-native-swipe-cards`
-2. Create a module e.g. `Tinder.js`
-3. Import it `import Tinder from './Tinder.js'`
-4. Render it `<Tinder style={{flex: 1}} />`
+2. Create a module e.g. `SwipeCards.js`
+3. Import it `import SwipeCards from './SwipeCards.js'`
+4. Render it `<SwipeCards style={{flex: 1}} />`
 
 ```javascript
-// Tinder.js
+// SwipeCards.js
 'use strict';
 
 import React, { Component } from 'react';
