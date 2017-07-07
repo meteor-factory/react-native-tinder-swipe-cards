@@ -3,11 +3,8 @@
 A [package](https://www.npmjs.com/package/react-native-swipe-cards) based on [@brentvatne](https://github.com/brentvatne/)'s awesome [example](https://github.com/brentvatne/react-native-animated-demo-tinder).
 
 
-!![React Native Swipe Cards](https://github.com/esganzerla/react-native-tinder-swipe-cards/blob/handle-maybe/screenshots/swiper-cards.gif)
-
-Note: Maybe action is optional
-
-![React Native Swipe Cards Pugs](https://raw.githubusercontent.com/meteor-factory/react-native-tinder-swipe-cards/master/screenshots/react-native-tinder-cards-pugs.gif)
+![React Native Swipe Cards](https://github.com/meteor-factory/react-native-tinder-swipe-cards/raw/master/screenshots/swiper-cards.gif
+)
 
 ## Quick Start
 1. `npm install --save react-native-swipe-cards`
