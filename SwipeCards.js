@@ -15,7 +15,7 @@ import clamp from "clamp";
 
 import Defaults from "./Defaults";
 
-const SWIPE_THRESHOLD = 120;
+const SWIPE_THRESHOLD = 100;
 
 const styles = StyleSheet.create({
   container: {
