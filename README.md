@@ -295,3 +295,5 @@ const styles = StyleSheet.create({
 - [ ] Testing
 - [ ] Add more args to `cardRemoved`?
 - [ ] `class extends` all components
+- [x] Swipe to previous card
+- [x] Add initial_index props
