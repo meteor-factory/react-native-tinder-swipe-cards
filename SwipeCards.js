@@ -97,7 +97,7 @@ export default class SwipeCards extends Component {
     yupView: React.PropTypes.element,
     maybeText: React.PropTypes.string,
     maybeView: React.PropTypes.element,
-    noText: React.PropTypes.string,
+    nopeText: React.PropTypes.string,
     noView: React.PropTypes.element,
     onClickHandler: React.PropTypes.func,
     renderCard: React.PropTypes.func,
