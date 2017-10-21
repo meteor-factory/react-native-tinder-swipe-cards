@@ -2,6 +2,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   StyleSheet,
@@ -75,35 +76,35 @@ let guid = 0;
 export default class SwipeCards extends Component {
 
   static propTypes = {
-    cards: React.PropTypes.array,
-    cardKey: React.PropTypes.string,
-    hasMaybeAction: React.PropTypes.bool,
-    loop: React.PropTypes.bool,
-    onLoop: React.PropTypes.func,
-    allowGestureTermination: React.PropTypes.bool,
-    stack: React.PropTypes.bool,
-    stackGuid: React.PropTypes.string,
-    stackDepth: React.PropTypes.number,
-    stackOffsetX: React.PropTypes.number,
-    stackOffsetY: React.PropTypes.number,
-    renderNoMoreCards: React.PropTypes.func,
-    showYup: React.PropTypes.bool,
-    showMaybe: React.PropTypes.bool,
-    showNope: React.PropTypes.bool,
-    handleYup: React.PropTypes.func,
-    handleMaybe: React.PropTypes.func,
-    handleNope: React.PropTypes.func,
-    yupText: React.PropTypes.string,
-    yupView: React.PropTypes.element,
-    maybeText: React.PropTypes.string,
-    maybeView: React.PropTypes.element,
-    nopeText: React.PropTypes.string,
-    noView: React.PropTypes.element,
-    onClickHandler: React.PropTypes.func,
-    renderCard: React.PropTypes.func,
-    cardRemoved: React.PropTypes.func,
-    dragY: React.PropTypes.bool,
-    smoothTransition: React.PropTypes.bool
+    cards: PropTypes.array,
+    cardKey: PropTypes.string,
+    hasMaybeAction: PropTypes.bool,
+    loop: PropTypes.bool,
+    onLoop: PropTypes.func,
+    allowGestureTermination: PropTypes.bool,
+    stack: PropTypes.bool,
+    stackGuid: PropTypes.string,
+    stackDepth: PropTypes.number,
+    stackOffsetX: PropTypes.number,
+    stackOffsetY: PropTypes.number,
+    renderNoMoreCards: PropTypes.func,
+    showYup: PropTypes.bool,
+    showMaybe: PropTypes.bool,
+    showNope: PropTypes.bool,
+    handleYup: PropTypes.func,
+    handleMaybe: PropTypes.func,
+    handleNope: PropTypes.func,
+    yupText: PropTypes.string,
+    yupView: PropTypes.element,
+    maybeText: PropTypes.string,
+    maybeView: PropTypes.element,
+    nopeText: PropTypes.string,
+    noView: PropTypes.element,
+    onClickHandler: PropTypes.func,
+    renderCard: PropTypes.func,
+    cardRemoved: PropTypes.func,
+    dragY: PropTypes.bool,
+    smoothTransition: PropTypes.bool
   };
 
   static defaultProps = {

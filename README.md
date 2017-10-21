@@ -21,7 +21,11 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
 
-let Card = React.createClass({
+class Card extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <View style={[styles.card, {backgroundColor: this.props.backgroundColor}]}>
@@ -29,7 +33,7 @@ let Card = React.createClass({
       </View>
     )
   }
-})
+}
 
 class NoMoreCards extends Component {
   constructor(props) {
@@ -45,37 +49,36 @@ class NoMoreCards extends Component {
   }
 }
 
-const Cards = [
-  {text: 'Tomato', backgroundColor: 'red'},
-  {text: 'Aubergine', backgroundColor: 'purple'},
-  {text: 'Courgette', backgroundColor: 'green'},
-  {text: 'Blueberry', backgroundColor: 'blue'},
-  {text: 'Umm...', backgroundColor: 'cyan'},
-  {text: 'orange', backgroundColor: 'orange'},
-]
+export default class extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cards: [
+        {text: 'Tomato', backgroundColor: 'red'},
+        {text: 'Aubergine', backgroundColor: 'purple'},
+        {text: 'Courgette', backgroundColor: 'green'},
+        {text: 'Blueberry', backgroundColor: 'blue'},
+        {text: 'Umm...', backgroundColor: 'cyan'},
+        {text: 'orange', backgroundColor: 'orange'},
+      ]
+    };
+  }
 
-export default React.createClass({
-  getInitialState() {
-    return {
-      cards: Cards
-    }
-  },
   handleYup (card) {
     console.log(`Yup for ${card.text}`)
-  },
+  }
   handleNope (card) {
     console.log(`Nope for ${card.text}`)
-  },
+  }
   handleMaybe (card) {
     console.log(`Maybe for ${card.text}`)
-  },
+  }
   render() {
     // If you want a stack of cards instead of one-per-one view, activate stack mode
     // stack={true}
     return (
       <SwipeCards
         cards={this.state.cards}
-
         renderCard={(cardData) => <Card {...cardData} />}
         renderNoMoreCards={() => <NoMoreCards />}
 
@@ -86,11 +89,10 @@ export default React.createClass({
       />
     )
   }
-})
+}
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: 300,
@@ -100,7 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   }
 })
-
 ```
 
 ### More complex example
@@ -110,10 +111,13 @@ const styles = StyleSheet.create({
 import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
-
 import SwipeCards from 'react-native-swipe-cards';
 
-let Card = React.createClass({
+class Card extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <View style={styles.card}>
@@ -122,9 +126,13 @@ let Card = React.createClass({
       </View>
     )
   }
-})
+}
 
-let NoMoreCards = React.createClass({
+class NoMoreCards extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <View style={styles.noMoreCards}>
@@ -132,9 +140,9 @@ let NoMoreCards = React.createClass({
       </View>
     )
   }
-})
+}
 
-const Cards = [
+const cards = [
   {name: '1', image: 'https://media.giphy.com/media/GfXFVHUzjlbOg/giphy.gif'},
   {name: '2', image: 'https://media.giphy.com/media/irTuv1L1T34TC/giphy.gif'},
   {name: '3', image: 'https://media.giphy.com/media/LkLL0HJerdXMI/giphy.gif'},
@@ -146,26 +154,30 @@ const Cards = [
   {name: '9', image: 'https://media.giphy.com/media/3oEduJbDtIuA2VrtS0/giphy.gif'},
 ]
 
-const Cards2 = [
+const cards2 = [
   {name: '10', image: 'https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif'},
   {name: '11', image: 'https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif'},
   {name: '12', image: 'https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif'},
   {name: '13', image: 'https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif'},
 ]
 
-export default React.createClass({
-  getInitialState() {
-    return {
-      cards: Cards,
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cards: cards,
       outOfCards: false
     }
-  },
+  }
+
   handleYup (card) {
     console.log("yup")
-  },
+  }
+
   handleNope (card) {
     console.log("nope")
-  },
+  }
+
   cardRemoved (index) {
     console.log(`The index is ${index}`);
 
@@ -175,17 +187,18 @@ export default React.createClass({
       console.log(`There are only ${this.state.cards.length - index - 1} cards left.`);
 
       if (!this.state.outOfCards) {
-        console.log(`Adding ${Cards2.length} more cards`)
+        console.log(`Adding ${cards2.length} more cards`)
 
         this.setState({
-          cards: this.state.cards.concat(Cards2),
+          cards: this.state.cards.concat(cards2),
           outOfCards: true
         })
       }
 
     }
 
-  },
+  }
+
   render() {
     return (
       <SwipeCards
@@ -199,11 +212,11 @@ export default React.createClass({
 
         handleYup={this.handleYup}
         handleNope={this.handleNope}
-        cardRemoved={this.cardRemoved}
+        cardRemoved={this.cardRemoved.bind(this)}
       />
     )
   }
-})
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -216,7 +229,6 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   thumbnail: {
-    flex: 1,
     width: 300,
     height: 300,
   },
