@@ -10,7 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/meteor-factory/react-native-tinder-swipe-cards.git"
   },
-  "keywords": ["react-native", "tinder", "cards", "swipe"],
+  "keywords": [
+    "react-native",
+    "tinder",
+    "cards",
+    "swipe"
+  ],
   "author": "meteor-factory",
   "license": "MIT",
   "bugs": {
@@ -18,6 +23,7 @@
   },
   "homepage": "https://github.com/meteor-factory/react-native-tinder-swipe-cards#readme",
   "dependencies": {
-    "clamp": "^1.0.1"
+    "clamp": "^1.0.1",
+    "prop-types": "^15.6.0"
   }
 }
