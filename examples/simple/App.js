@@ -78,7 +78,6 @@ export default class extends React.Component {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: 300,
