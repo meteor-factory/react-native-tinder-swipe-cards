@@ -462,7 +462,7 @@ export default class SwipeCards extends Component {
 
     let nopeOpacity = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
     let nopeScale = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, 0], outputRange: [1, 0], extrapolate: 'clamp' });
-    let animatedNopeStyles = { transform: [{ scale: nopeScale }], opacity: nopeOpacity };
+    let animatedNopeStyles = { transform: [...this.props.nopeStyle.transform, { scale: nopeScale }], opacity: nopeOpacity };
 
     if (this.props.renderNope) {
       return this.props.renderNope(pan);
@@ -489,7 +489,7 @@ export default class SwipeCards extends Component {
 
     let maybeOpacity = pan.y.interpolate({ inputRange: [-SWIPE_THRESHOLD, -(SWIPE_THRESHOLD/2)], outputRange: [1, 0], extrapolate: 'clamp' });
     let maybeScale = pan.x.interpolate({ inputRange: [-SWIPE_THRESHOLD, 0, SWIPE_THRESHOLD], outputRange: [0, 1, 0], extrapolate: 'clamp' });
-    let animatedMaybeStyles = { transform: [{ scale: maybeScale }], opacity: maybeOpacity };
+    let animatedMaybeStyles = { transform: [...this.props.maybeStyle.transform, { scale: maybeScale }], opacity: maybeOpacity };
 
     if (this.props.renderMaybe) {
       return this.props.renderMaybe(pan);
@@ -515,7 +515,7 @@ export default class SwipeCards extends Component {
 
     let yupOpacity = pan.x.interpolate({ inputRange: [(SWIPE_THRESHOLD/2), SWIPE_THRESHOLD], outputRange: [0, 1], extrapolate: 'clamp' });
     let yupScale = pan.x.interpolate({ inputRange: [0, SWIPE_THRESHOLD], outputRange: [0.5, 1], extrapolate: 'clamp' });
-    let animatedYupStyles = { transform: [{ scale: yupScale }], opacity: yupOpacity };
+    let animatedYupStyles = { transform: [...this.props.yupStyle.transform, { scale: yupScale }], opacity: yupOpacity };
 
     if (this.props.renderYup) {
       return this.props.renderYup(pan);
