@@ -91,6 +91,7 @@ export default class SwipeCards extends Component {
     showYup: PropTypes.bool,
     showMaybe: PropTypes.bool,
     showNope: PropTypes.bool,
+    enablePrev: PropTypes.bool,
     handleYup: PropTypes.func,
     handleMaybe: PropTypes.func,
     handleNope: PropTypes.func,
@@ -121,6 +122,7 @@ export default class SwipeCards extends Component {
     showYup: true,
     showMaybe: true,
     showNope: true,
+    enablePrev: false,
     handleYup: (card) => null,
     handleMaybe: (card) => null,
     handleNope: (card) => null,
@@ -176,6 +178,10 @@ export default class SwipeCards extends Component {
         null, { dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0 },
       ]),
 
+      onStartShouldSetPanResponder: (e, gestureState) => {
+          return true;
+      },
+
       onPanResponderRelease: (e, {vx, vy, dx, dy}) => {
         this.props.onDragRelease()
         this.state.pan.flattenOffset();
@@ -229,7 +235,7 @@ export default class SwipeCards extends Component {
               deceleration: 0.98
             });
             this.cardAnimation.start(status => {
-              if (status.finished) this._advanceState();
+              if (status.finished) this._advanceState(!!(this.props.enablePrev && hasMovedRight));
               else this._resetState();
 
               this.cardAnimation = null;
@@ -274,7 +280,7 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
+      if (status.finished) this._advanceState(this.props.enablePrev);
       else this._resetState();
 
       this.cardAnimation = null;
@@ -354,11 +360,11 @@ export default class SwipeCards extends Component {
     this._animateEntrance();
   }
 
-  _advanceState() {
+  _advanceState( prev = false ) {
     this.state.pan.setValue({ x: 0, y: 0 });
     this.state.enter.setValue(0);
     this._animateEntrance();
-    this._goToNextCard();
+    prev ? this._goToPrevCard() : this._goToNextCard();
   }
 
   /**
