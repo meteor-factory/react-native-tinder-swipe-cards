@@ -24,8 +24,6 @@ const SWIPE_THRESHOLD = 120;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   yup: {
@@ -149,7 +147,7 @@ export default class SwipeCards extends Component {
     this.state = {
       pan: new Animated.ValueXY(0),
       enter: new Animated.Value(0.5),
-      cards: [].concat(this.props.cards),
+      cards: [...this.props.cards],
       card: this.props.cards[currentIndex[this.guid]],
     };
 
@@ -341,7 +339,7 @@ export default class SwipeCards extends Component {
 
       currentIndex[this.guid] = 0;
       this.setState({
-        cards: [].concat(nextProps.cards),
+        cards: [...nextProps.cards],
         card: nextProps.cards[0]
       });
     }
@@ -434,7 +432,9 @@ export default class SwipeCards extends Component {
           ]
         };
 
-        return <Animated.View key={card[this.props.cardKey]} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+        return <Animated.View
+            key={card[this.props.cardKey]}
+            style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
           {this.props.renderCard(this.state.card)}
         </Animated.View>;
       }
@@ -458,7 +458,7 @@ export default class SwipeCards extends Component {
 
     let animatedCardStyles = { transform: [{ translateX }, { translateY }, { rotate }, { scale }], opacity };
 
-    return <Animated.View key={"top"} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+    return <Animated.View key={"top"} style={[styles.card, animatedCardStyles]} {...this._panResponder.panHandlers}>
       {this.props.renderCard(this.state.card)}
     </Animated.View>;
   }
