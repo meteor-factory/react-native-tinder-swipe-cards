@@ -543,7 +543,7 @@ export default class SwipeCards extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.cardBlockStyle]}>
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderNope()}
         {this.renderMaybe()}
