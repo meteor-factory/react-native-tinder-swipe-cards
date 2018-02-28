@@ -24,8 +24,6 @@ const SWIPE_THRESHOLD = 120;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   yup: {
@@ -91,6 +89,7 @@ export default class SwipeCards extends Component {
     showYup: PropTypes.bool,
     showMaybe: PropTypes.bool,
     showNope: PropTypes.bool,
+    enablePrev: PropTypes.bool,
     handleYup: PropTypes.func,
     handleMaybe: PropTypes.func,
     handleNope: PropTypes.func,
@@ -121,6 +120,7 @@ export default class SwipeCards extends Component {
     showYup: true,
     showMaybe: true,
     showNope: true,
+    enablePrev: false,
     handleYup: (card) => null,
     handleMaybe: (card) => null,
     handleNope: (card) => null,
@@ -147,7 +147,7 @@ export default class SwipeCards extends Component {
     this.state = {
       pan: new Animated.ValueXY(0),
       enter: new Animated.Value(0.5),
-      cards: [].concat(this.props.cards),
+      cards: [...this.props.cards],
       card: this.props.cards[currentIndex[this.guid]],
     };
 
@@ -175,6 +175,10 @@ export default class SwipeCards extends Component {
       onPanResponderMove: Animated.event([
         null, { dx: this.state.pan.x, dy: this.props.dragY ? this.state.pan.y : 0 },
       ]),
+
+      onStartShouldSetPanResponder: (e, gestureState) => {
+          return true;
+      },
 
       onPanResponderRelease: (e, {vx, vy, dx, dy}) => {
         this.props.onDragRelease()
@@ -229,7 +233,7 @@ export default class SwipeCards extends Component {
               deceleration: 0.98
             });
             this.cardAnimation.start(status => {
-              if (status.finished) this._advanceState();
+              if (status.finished) this._advanceState(!!(this.props.enablePrev && hasMovedRight));
               else this._resetState();
 
               this.cardAnimation = null;
@@ -274,7 +278,7 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
+      if (status.finished) this._advanceState(this.props.enablePrev);
       else this._resetState();
 
       this.cardAnimation = null;
@@ -335,7 +339,7 @@ export default class SwipeCards extends Component {
 
       currentIndex[this.guid] = 0;
       this.setState({
-        cards: [].concat(nextProps.cards),
+        cards: [...nextProps.cards],
         card: nextProps.cards[0]
       });
     }
@@ -354,11 +358,11 @@ export default class SwipeCards extends Component {
     this._animateEntrance();
   }
 
-  _advanceState() {
+  _advanceState( prev = false ) {
     this.state.pan.setValue({ x: 0, y: 0 });
     this.state.enter.setValue(0);
     this._animateEntrance();
-    this._goToNextCard();
+    prev ? this._goToPrevCard() : this._goToNextCard();
   }
 
   /**
@@ -428,7 +432,9 @@ export default class SwipeCards extends Component {
           ]
         };
 
-        return <Animated.View key={card[this.props.cardKey]} style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
+        return <Animated.View
+            key={card[this.props.cardKey]}
+            style={[styles.card, animatedCardStyles]} {... this._panResponder.panHandlers}>
           {this.props.renderCard(this.state.card)}
         </Animated.View>;
       }
@@ -537,7 +543,7 @@ export default class SwipeCards extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.cardBlockStyle]}>
         {this.props.stack ? this.renderStack() : this.renderCard()}
         {this.renderNope()}
         {this.renderMaybe()}
