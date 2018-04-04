@@ -390,11 +390,11 @@ export default class SwipeCards extends Component {
     let cards = this.state.cards.slice(currentIndex[this.guid], currentIndex[this.guid] + this.props.stackDepth).reverse();
 
     return cards.map((card, i) => {
-
-      let offsetX = this.props.stackOffsetX * cards.length - i * this.props.stackOffsetX;
+      
+      let offsetX = (this.props.stackOffsetX * cards.length - i * this.props.stackOffsetX) + this.props.stackX ;
       let lastOffsetX = offsetX + this.props.stackOffsetX;
 
-      let offsetY = this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY;
+      let offsetY = (this.props.stackOffsetY * cards.length - i * this.props.stackOffsetY) + this.props.stackY;
       let lastOffsetY = offsetY + this.props.stackOffsetY;
 
       let opacity = 0.25 + (0.75 / cards.length) * (i + 1);
@@ -403,21 +403,10 @@ export default class SwipeCards extends Component {
       let scale = 0.85 + (0.15 / cards.length) * (i + 1);
       let lastScale = 0.85 + (0.15 / cards.length) * i;
 
-      //Old lines, do not center cuurectly stack on screen, keeping as reference.
-//       let style = {
-//         position: 'absolute',
-//         top: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetY, offsetY] }),
-//         left: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetX, offsetX] }),
-//         opacity: this.props.smoothTransition ? 1 : this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
-//         transform: [{ scale: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastScale, scale] }) }],
-//         elevation: i * 10
-//       };
-      
-      //Boom! This works.
-         let style = {
+      let style = {
         position: 'absolute',
-        top: this.props.stackY,
-        left: this.props.stackX,
+        top: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetY, offsetY] }),
+        left: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetX, offsetX] }),
         opacity: this.props.smoothTransition ? 1 : this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
         transform: [{ scale: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastScale, scale] }) }],
         elevation: i * 10
