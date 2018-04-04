@@ -104,7 +104,9 @@ export default class SwipeCards extends Component {
     renderCard: PropTypes.func,
     cardRemoved: PropTypes.func,
     dragY: PropTypes.bool,
-    smoothTransition: PropTypes.bool
+    smoothTransition: PropTypes.bool,
+    stackY: PropTypes.number,
+    stackX: PropTypes.number
   };
 
   static defaultProps = {
@@ -401,10 +403,21 @@ export default class SwipeCards extends Component {
       let scale = 0.85 + (0.15 / cards.length) * (i + 1);
       let lastScale = 0.85 + (0.15 / cards.length) * i;
 
-      let style = {
+      //Old lines, do not center cuurectly stack on screen, keeping as reference.
+//       let style = {
+//         position: 'absolute',
+//         top: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetY, offsetY] }),
+//         left: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetX, offsetX] }),
+//         opacity: this.props.smoothTransition ? 1 : this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
+//         transform: [{ scale: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastScale, scale] }) }],
+//         elevation: i * 10
+//       };
+      
+      //Boom! This works.
+         let style = {
         position: 'absolute',
-        top: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetY, offsetY] }),
-        left: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOffsetX, offsetX] }),
+        top: this.props.stackY,
+        left: this.props.stackX,
         opacity: this.props.smoothTransition ? 1 : this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastOpacity, opacity] }),
         transform: [{ scale: this.state.enter.interpolate({ inputRange: [0, 1], outputRange: [lastScale, scale] }) }],
         elevation: i * 10
