@@ -271,8 +271,8 @@ const styles = StyleSheet.create({
 | maybeTextStyle    | style    | Override default style                                      |              |
 | yupView           | element  | React component to render on a Yes vote                     |              |
 | yupText           | string   | Text to render on Yes vote                                  | `Yep`        |
-| noView            | element  | React component to render on a No vote                      |              |
-| noText            | string   | Text to render on No vote                                   | `Nope`       |
+| nopeView          | element  | React component to render on a No vote                      |              |
+| nopeText          | string   | Text to render on No vote                                   | `Nope`       |
 | maybeView         | element  | React component to render on a Maybe vote                   |              |
 | maybeText         | string   | Text to render on Maybe vote                                | `Maybe`      |
 | smoothTransition  | Boolean  | Disables a slow transition fading the current card out      | `false`      |
