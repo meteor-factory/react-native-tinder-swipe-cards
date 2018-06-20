@@ -72,6 +72,9 @@ const styles = StyleSheet.create({
 //Components could be unloaded and loaded and we will loose the users currentIndex, we can persist it here.
 let currentIndex = {};
 let guid = 0;
+const DIRECTION_LEFT = 'left';
+const DIRECTION_RIGHT = 'right';
+const DIRECTION_BOTH = 'both';
 
 export default class SwipeCards extends Component {
 
@@ -104,7 +107,12 @@ export default class SwipeCards extends Component {
     renderCard: PropTypes.func,
     cardRemoved: PropTypes.func,
     dragY: PropTypes.bool,
-    smoothTransition: PropTypes.bool
+    smoothTransition: PropTypes.bool,
+    direction: PropTypes.oneOf([
+      DIRECTION_LEFT,
+      DIRECTION_RIGHT,
+      DIRECTION_BOTH,
+    ])
   };
 
   static defaultProps = {
@@ -134,7 +142,8 @@ export default class SwipeCards extends Component {
     renderCard: (card) => null,
     style: styles.container,
     dragY: true,
-    smoothTransition: false
+    smoothTransition: false,
+    direction: DIRECTION_BOTH,
   };
 
   constructor(props) {
@@ -222,14 +231,14 @@ export default class SwipeCards extends Component {
           this.props.cardRemoved(currentIndex[this.guid]);
 
           if (this.props.smoothTransition) {
-            this._advanceState();
+            this._advanceState(velocity);
           } else {
             this.cardAnimation = Animated.decay(this.state.pan, {
               velocity: { x: velocity, y: vy },
               deceleration: 0.98
             });
             this.cardAnimation.start(status => {
-              if (status.finished) this._advanceState();
+              if (status.finished) this._advanceState(velocity);
               else this._resetState();
 
               this.cardAnimation = null;
@@ -248,7 +257,7 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: -500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
+      if (status.finished) this._advanceState(-1);
       else this._resetState();
 
       this.cardAnimation = null;
@@ -261,7 +270,7 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 0, y: 500 },
     }).start(status => {
-      if (status.finished) this._advanceState();
+      if (status.finished) this._advanceState(1);
       else this._resetState();
 
       this.cardAnimation = null;
@@ -274,7 +283,7 @@ export default class SwipeCards extends Component {
     this.cardAnimation = Animated.timing(this.state.pan, {
       toValue: { x: 500, y: 0 },
     }).start(status => {
-      if (status.finished) this._advanceState();
+      if (status.finished) this._advanceState(1);
       else this._resetState();
 
       this.cardAnimation = null;
@@ -306,7 +315,12 @@ export default class SwipeCards extends Component {
     currentIndex[this.guid]--;
 
     if (currentIndex[this.guid] < 0) {
-      currentIndex[this.guid] = 0;
+      if(this.props.loop) {
+        this.props.onLoop();
+        currentIndex[this.guid] = this.state.cards.length - 1;
+      } else {
+        currentIndex[this.guid] = 0;
+      }
     }
 
     this.setState({
@@ -354,10 +368,18 @@ export default class SwipeCards extends Component {
     this._animateEntrance();
   }
 
-  _advanceState() {
+  _advanceState(direction) {
+    console.log(direction);
     this.state.pan.setValue({ x: 0, y: 0 });
     this.state.enter.setValue(0);
     this._animateEntrance();
+    if (
+      this.props.direction === DIRECTION_LEFT && direction < 1 ||
+      this.props.direction === DIRECTION_RIGHT && direction > 1
+    ) {
+      this._goToPrevCard();
+      return;
+    }
     this._goToNextCard();
   }
 
