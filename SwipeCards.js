@@ -369,7 +369,6 @@ export default class SwipeCards extends Component {
   }
 
   _advanceState(direction) {
-    console.log(direction);
     this.state.pan.setValue({ x: 0, y: 0 });
     this.state.enter.setValue(0);
     this._animateEntrance();
