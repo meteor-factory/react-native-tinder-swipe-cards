@@ -316,6 +316,11 @@ export default class SwipeCards extends Component {
 
   componentDidMount() {
     this._animateEntrance();
+    this.props.onRef(this);
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined);
   }
 
   _animateEntrance() {
