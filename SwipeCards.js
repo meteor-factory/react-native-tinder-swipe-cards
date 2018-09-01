@@ -104,7 +104,8 @@ export default class SwipeCards extends Component {
     renderCard: PropTypes.func,
     cardRemoved: PropTypes.func,
     dragY: PropTypes.bool,
-    smoothTransition: PropTypes.bool
+    smoothTransition: PropTypes.bool,
+    currentCard: PropTypes.function
   };
 
   static defaultProps = {
@@ -134,7 +135,8 @@ export default class SwipeCards extends Component {
     renderCard: (card) => null,
     style: styles.container,
     dragY: true,
-    smoothTransition: false
+    smoothTransition: false,
+    currentCard: (card, cards) => {}
   };
 
   constructor(props) {
@@ -293,9 +295,10 @@ export default class SwipeCards extends Component {
       currentIndex[this.guid] = 0;
     }
 
-    this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
-    });
+    const card = this.state.cards[currentIndex[this.guid]];
+
+    this.setState({ card });
+    this.props.currentCard(card, this.state.cards);
   }
 
   _goToPrevCard() {
@@ -309,14 +312,20 @@ export default class SwipeCards extends Component {
       currentIndex[this.guid] = 0;
     }
 
-    this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
-    });
+    const card = this.state.cards[currentIndex[this.guid]];
+
+    this.setState({ card });
+    this.props.currentCard(card, this.state.cards);
   }
 
   componentDidMount() {
     this._animateEntrance();
     this.props.onRef(this);
+    
+    const cards = [].concat(this.props.cards);
+    const card = card: this.props.cards[currentIndex[this.guid]];
+    
+    this.props.currentCard(card, cards);    
   }
 
   componentWillUnmount() {
@@ -339,10 +348,11 @@ export default class SwipeCards extends Component {
       }
 
       currentIndex[this.guid] = 0;
-      this.setState({
-        cards: [].concat(nextProps.cards),
-        card: nextProps.cards[0]
-      });
+      const cards = [].concat(nextProps.cards);
+      const card = nextProps.cards[0];
+      
+      this.setState({ cards, card });
+      this.props.currentCard(card, cards);    
     }
   }
 
