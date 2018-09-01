@@ -104,7 +104,9 @@ export default class SwipeCards extends Component {
     renderCard: PropTypes.func,
     cardRemoved: PropTypes.func,
     dragY: PropTypes.bool,
-    smoothTransition: PropTypes.bool
+    smoothTransition: PropTypes.bool,
+    currentCard: PropTypes.func,
+    onRef: PropTypes.func
   };
 
   static defaultProps = {
@@ -134,7 +136,9 @@ export default class SwipeCards extends Component {
     renderCard: (card) => null,
     style: styles.container,
     dragY: true,
-    smoothTransition: false
+    smoothTransition: false,
+    currentCard: (card, cards) => null,
+    onRef: (ref) => null
   };
 
   constructor(props) {
@@ -293,9 +297,10 @@ export default class SwipeCards extends Component {
       currentIndex[this.guid] = 0;
     }
 
-    this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
-    });
+    const card = this.state.cards[currentIndex[this.guid]];
+
+    this.setState({ card });
+    this.props.currentCard(card, currentIndex[this.guid], this.state.cards);
   }
 
   _goToPrevCard() {
@@ -309,13 +314,24 @@ export default class SwipeCards extends Component {
       currentIndex[this.guid] = 0;
     }
 
-    this.setState({
-      card: this.state.cards[currentIndex[this.guid]]
-    });
+    const card = this.state.cards[currentIndex[this.guid]];
+
+    this.setState({ card });
+    this.props.currentCard(card, currentIndex[this.guid], this.state.cards);
   }
 
   componentDidMount() {
     this._animateEntrance();
+    this.props.onRef(this);
+
+    const cards = [].concat(this.props.cards);
+    const card = this.props.cards[currentIndex[this.guid]];
+
+    this.props.currentCard(card, currentIndex[this.guid], cards);
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined);
   }
 
   _animateEntrance() {
@@ -334,10 +350,11 @@ export default class SwipeCards extends Component {
       }
 
       currentIndex[this.guid] = 0;
-      this.setState({
-        cards: [].concat(nextProps.cards),
-        card: nextProps.cards[0]
-      });
+      const cards = [].concat(nextProps.cards);
+      const card = nextProps.cards[0];
+
+      this.setState({ cards, card });
+      this.props.currentCard(card, 0, cards);
     }
   }
 
