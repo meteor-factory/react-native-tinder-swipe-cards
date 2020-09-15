@@ -11,7 +11,7 @@ import {
   Animated,
   PanResponder,
   Dimensions,
-  Image
+  ViewPropTypes,
 } from 'react-native';
 
 import clamp from 'clamp';
@@ -96,13 +96,22 @@ export default class SwipeCards extends Component {
     handleNope: PropTypes.func,
     yupText: PropTypes.string,
     yupView: PropTypes.element,
+    yupStyle: ViewPropTypes.style,
+    renderYup: PropTypes.func,
     maybeText: PropTypes.string,
     maybeView: PropTypes.element,
+    maybeStyle: ViewPropTypes.style,
+    renderMaybe: PropTypes.func,
     nopeText: PropTypes.string,
-    noView: PropTypes.element,
+    nopeView: PropTypes.element,
+    nopeStyle: ViewPropTypes.style,
+    renderNope: PropTypes.func,
     onClickHandler: PropTypes.func,
-    renderCard: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDragRelease: PropTypes.func,
     cardRemoved: PropTypes.func,
+    renderCard: PropTypes.func,
+    style: ViewPropTypes.style,
     dragY: PropTypes.bool,
     smoothTransition: PropTypes.bool
   };
@@ -127,7 +136,7 @@ export default class SwipeCards extends Component {
     nopeText: "Nope!",
     maybeText: "Maybe!",
     yupText: "Yup!",
-    onClickHandler: () => { alert('tap') },
+    onClickHandler: () => { },
     onDragStart: () => {},
     onDragRelease: () => {},
     cardRemoved: (ix) => null,
@@ -470,8 +479,8 @@ export default class SwipeCards extends Component {
 
     if (this.props.showNope) {
 
-      const inner = this.props.noView
-        ? this.props.noView
+      const inner = this.props.nopeView
+        ? this.props.nopeView
         : <Text style={[styles.nopeText, this.props.nopeTextStyle]}>{this.props.nopeText}</Text>
 
       return <Animated.View style={[styles.nope, this.props.nopeStyle, animatedNopeStyles]}>
