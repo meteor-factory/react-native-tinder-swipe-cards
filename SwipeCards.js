@@ -11,6 +11,7 @@ import {
   Animated,
   PanResponder,
   Dimensions,
+  ViewPropTypes,
 } from 'react-native';
 
 import clamp from 'clamp';
@@ -103,8 +104,11 @@ export default class SwipeCards extends Component {
     nopeView: PropTypes.element,
     renderNope: PropTypes.func,
     onClickHandler: PropTypes.func,
-    renderCard: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDragRelease: PropTypes.func,
     cardRemoved: PropTypes.func,
+    renderCard: PropTypes.func,
+    style: ViewPropTypes.style,
     dragY: PropTypes.bool,
     smoothTransition: PropTypes.bool
   };
