@@ -11,7 +11,6 @@ import {
   Animated,
   PanResponder,
   Dimensions,
-  Image
 } from 'react-native';
 
 import clamp from 'clamp';
