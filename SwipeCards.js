@@ -479,8 +479,8 @@ export default class SwipeCards extends Component {
 
     if (this.props.showNope) {
 
-      const inner = this.props.noView
-        ? this.props.noView
+      const inner = this.props.nopeView
+        ? this.props.nopeView
         : <Text style={[styles.nopeText, this.props.nopeTextStyle]}>{this.props.nopeText}</Text>
 
       return <Animated.View style={[styles.nope, this.props.nopeStyle, animatedNopeStyles]}>
