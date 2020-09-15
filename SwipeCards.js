@@ -99,7 +99,7 @@ export default class SwipeCards extends Component {
     maybeText: PropTypes.string,
     maybeView: PropTypes.element,
     nopeText: PropTypes.string,
-    noView: PropTypes.element,
+    nopeView: PropTypes.element,
     onClickHandler: PropTypes.func,
     renderCard: PropTypes.func,
     cardRemoved: PropTypes.func,
